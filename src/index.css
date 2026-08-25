@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'CompactaBT';
+  src: url('/fonts/CompactaBT.ttf') format('truetype'),
+       url('/CompactaBT.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer utilities {
+  .font-compacta {
+    font-family: 'CompactaBT', 'Bebas Neue', sans-serif;
+  }
   .font-bebas {
     font-family: 'Bebas Neue', sans-serif;
   }
@@ -26,7 +38,7 @@ html, body {
   padding: 0;
   width: 100%;
   overflow-x: hidden;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'CompactaBT', 'Bebas Neue', sans-serif;
 }
 
 /* Custom Lenis smooth scroll styling */
@@ -61,7 +73,7 @@ html.lenis, html.lenis body {
 }
 
 .text-glow-red {
-  text-shadow: 0 0 12px rgba(230, 0, 0, 0.8), 0 0 25px rgba(230, 0, 0, 0.4);
+  text-shadow: none;
 }
 
 .border-glow-red {

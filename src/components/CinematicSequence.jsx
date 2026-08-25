@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { playVaultGateSound } from '../utils/audio';
+import Countdown from './Countdown';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,7 +13,20 @@ const CinematicSequence = ({ onSequenceComplete }) => {
   const gateRightRef = useRef(null);
   const crewRef = useRef(null);
   const titleRevealRef = useRef(null);
+  const landingHeroRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [goldSheenX, setGoldSheenX] = useState(null);
+
+  const handleHeroMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (!rect.width) return;
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    setGoldSheenX(Math.max(0, Math.min(100, x)));
+  };
+
+  const handleHeroMouseLeave = () => {
+    setGoldSheenX(null);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -55,20 +69,19 @@ const CinematicSequence = ({ onSequenceComplete }) => {
       const rad = (angleDeg * Math.PI) / 180;
       ctx.rotate(rad);
 
-      // Perspective scale trick for 3D feel
+      // Maintain exact 1:1 original aspect ratio without deformation
       const maxDim = Math.min(canvasWidth * 0.7, canvasHeight * 0.7, 450);
       const drawWidth = maxDim * scaleVal;
       const drawHeight = maxDim * scaleVal;
 
-      // Subtle 3D perspective squish during rotation
-      const cosVal = Math.abs(Math.cos(rad));
-      const scaleX = 0.4 + 0.6 * cosVal;
-
-      ctx.scale(scaleX, 1);
-
       // Subtle drop shadow & red glow under mask
       ctx.shadowColor = 'rgba(230, 0, 0, 0.8)';
       ctx.shadowBlur = 40;
+
+      // Circular clip mask to remove rectangular JPEG image borders completely
+      ctx.beginPath();
+      ctx.arc(0, 0, drawWidth * 0.45, 0, Math.PI * 2);
+      ctx.clip();
 
       ctx.drawImage(
         maskImg,
@@ -105,6 +118,14 @@ const CinematicSequence = ({ onSequenceComplete }) => {
           },
         },
       });
+
+      // Phase 0: Hero Landing Branding Fade Out (0.0 to 0.20)
+      tl.fromTo(
+        landingHeroRef.current,
+        { opacity: 1, scale: 1, y: 0 },
+        { opacity: 0, scale: 0.9, y: -40, duration: 0.20, ease: 'power2.out' },
+        0
+      );
 
       // Phase 1: Darkness -> Mask Emerges (0.0 to 0.15)
       tl.to(currentOpacityRef, {
@@ -251,39 +272,72 @@ const CinematicSequence = ({ onSequenceComplete }) => {
         <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505]" />
       </div>
 
-      {/* Scene 07: CYBERPUNK Movie Title Reveal */}
+      {/* Scene 01: Opening Landing Hero Branding (CYBER | PUNK + 10 SEPTEMBER) */}
       <div
-        ref={titleRevealRef}
-        className="absolute z-40 flex flex-col items-center justify-center text-center px-4 max-w-4xl opacity-0"
+        ref={landingHeroRef}
+        onMouseMove={handleHeroMouseMove}
+        onMouseLeave={handleHeroMouseLeave}
+        className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-4 pointer-events-auto cursor-pointer select-none"
       >
-        {/* Logo Treatment: CYBER | PUNK */}
-        <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4 flex-wrap">
-          <span className="font-bebas text-6xl sm:text-8xl md:text-9xl text-white tracking-widest font-black drop-shadow-2xl">
+        {/* Large Event Logo: CYBER | PUNK */}
+        <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 mb-3 sm:mb-4 relative">
+          <span
+            className="font-compacta text-[clamp(3.5rem,10vw,8.5rem)] tracking-wider uppercase leading-none font-bold drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]"
+            style={
+              goldSheenX !== null
+                ? {
+                    backgroundImage: `linear-gradient(90deg, #ffffff 0%, #ffffff ${Math.max(0, goldSheenX - 25)}%, #ffd700 ${Math.max(0, goldSheenX - 8)}%, #fff9b8 ${goldSheenX}%, #d4af37 ${Math.min(100, goldSheenX + 8)}%, #ffffff ${Math.min(100, goldSheenX + 25)}%, #ffffff 100%)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  }
+                : { color: '#ffffff' }
+            }
+          >
             CYBER
           </span>
-          <span className="font-bebas text-5xl sm:text-7xl md:text-8xl text-red-600 font-light">
+          <span className="font-compacta text-[clamp(3rem,8vw,7.5rem)] text-red-600 font-light leading-none">
             |
           </span>
-          <div className="bg-red-600 px-4 sm:px-8 py-1 sm:py-2 rounded-sm shadow-[0_0_40px_rgba(230,0,0,0.8)] border border-red-500">
-            <span className="font-bebas text-6xl sm:text-8xl md:text-9xl text-white tracking-widest font-black">
+          <div className="bg-red-600 px-3 sm:px-6 md:px-8 py-0.5 sm:py-1 rounded-sm shadow-[0_0_35px_rgba(230,0,0,0.7)] border border-red-500 flex items-center justify-center">
+            <span
+              className="font-compacta text-[clamp(3.5rem,10vw,8.5rem)] tracking-wider uppercase leading-none font-bold"
+              style={
+                goldSheenX !== null
+                  ? {
+                      backgroundImage: `linear-gradient(90deg, #ffffff 0%, #ffffff ${Math.max(0, goldSheenX - 25)}%, #ffd700 ${Math.max(0, goldSheenX - 8)}%, #fff9b8 ${goldSheenX}%, #d4af37 ${Math.min(100, goldSheenX + 8)}%, #ffffff ${Math.min(100, goldSheenX + 25)}%, #ffffff 100%)`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }
+                  : { color: '#ffffff' }
+              }
+            >
               PUNK
             </span>
           </div>
         </div>
 
-        {/* Subtitle Event Date */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="h-[2px] w-12 sm:w-24 bg-gradient-to-r from-transparent to-red-600" />
-          <p className="font-bebas text-2xl sm:text-4xl text-red-500 tracking-[0.3em] font-bold text-glow-red">
+        {/* Subtitle Date: 10 SEPTEMBER */}
+        <div className="flex items-center justify-center gap-3 sm:gap-4">
+          <div className="h-[2px] w-8 sm:w-16 md:w-24 bg-gradient-to-r from-transparent to-red-600" />
+          <p className="font-compacta text-[clamp(1.2rem,3.5vw,2.5rem)] text-red-600 tracking-[0.25em] sm:tracking-[0.35em] font-bold uppercase leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
             10 SEPTEMBER
           </p>
-          <div className="h-[2px] w-12 sm:w-24 bg-gradient-to-l from-transparent to-red-600" />
+          <div className="h-[2px] w-8 sm:w-16 md:w-24 bg-gradient-to-l from-transparent to-red-600" />
         </div>
+      </div>
+
+      {/* Scene 07: Final Operation Scene Live Countdown & CTA Reveal */}
+      <div
+        ref={titleRevealRef}
+        className="absolute inset-0 z-40 flex flex-col items-center justify-center text-center px-4 opacity-0 pointer-events-auto"
+      >
+        {/* Reused Single Source of Truth Countdown */}
+        <Countdown isEmbedded={true} />
 
         {/* Enter Operation Button */}
         <button
           onClick={scrollToMain}
-          className="group relative inline-flex items-center justify-center px-8 sm:px-12 py-4 bg-red-600 hover:bg-red-700 text-white font-bebas text-2xl sm:text-3xl tracking-widest rounded-none border border-red-500 shadow-[0_0_30px_rgba(230,0,0,0.6)] transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer mt-4"
+          className="group relative inline-flex items-center justify-center px-8 sm:px-12 py-4 bg-red-600 hover:bg-red-700 text-white font-compacta text-2xl sm:text-3xl tracking-widest rounded-none border border-red-500 shadow-[0_0_30px_rgba(230,0,0,0.6)] transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer"
         >
           <span className="absolute inset-0 w-full h-full bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           <span className="relative flex items-center gap-3">
