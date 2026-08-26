@@ -4,12 +4,11 @@ import { Globe, Code2, Share2, ShieldCheck } from 'lucide-react';
 
 const crewMembers = [
   {
-    name: 'THE PROFESSOR',
-    role: 'CHIEF OPERATING OFFICER',
-    codename: 'STRATEGY MASTERMIND',
+    name: 'Aditya Jadhav',
+    codename: 'Coordinator',
     image: '/assets/heist_dali_mask.jpg',
     bio: 'Architect behind the CYBERPUNK 2026 operation blueprint and system architecture.',
-    socials: { linkedin: '#', github: '#', twitter: '#' },
+    socials: { linkedin: '#', insta: '#',  },
   },
   {
     name: 'BERLIN',
@@ -17,7 +16,7 @@ const crewMembers = [
     codename: 'RED TEAM LEAD',
     image: '/assets/heist_dali_mask.jpg',
     bio: 'Commanding tactical defense networks and physical vault entry protocols.',
-    socials: { linkedin: '#', github: '#', twitter: '#' },
+    socials: { linkedin: '#', insta: '#',  },
   },
   {
     name: 'TOKYO',
@@ -25,7 +24,7 @@ const crewMembers = [
     codename: 'CINEMATIC DIRECTOR',
     image: '/assets/heist_dali_mask.jpg',
     bio: 'Leading the front-end visual storytelling and immersive scroll animations.',
-    socials: { linkedin: '#', github: '#', twitter: '#' },
+    socials: { linkedin: '#', insta: '#',  },
   },
   {
     name: 'NAIROBI',
@@ -33,7 +32,21 @@ const crewMembers = [
     codename: 'RESOURCE CONTROLLER',
     image: '/assets/heist_dali_mask.jpg',
     bio: 'Managing event allocations, prize distribution, and multi-venue coordination.',
-    socials: { linkedin: '#', github: '#', twitter: '#' },
+    socials: { linkedin: '#', insta: '#',  },
+  },
+   {
+    name: 'Aditya Jadhav',
+    role: 'Coordinator',
+    image: '/assets/heist_dali_mask.jpg',
+    bio: 'Architect behind the CYBERPUNK 2026 operation blueprint and system architecture.',
+    socials: { linkedin: '#', insta: '#',  },
+  },
+   {
+    name: 'Aditya Jadhav',
+    role: 'Coordinator',
+    image: '/assets/heist_dali_mask.jpg',
+    bio: 'Architect behind the CYBERPUNK 2026 operation blueprint and system architecture.',
+    socials: { linkedin: '#', insta: '#',  },
   },
 ];
 

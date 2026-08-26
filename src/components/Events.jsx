@@ -5,8 +5,8 @@ import { playHeistClickSound } from '../utils/audio';
 const eventsData = [
   {
     id: 'cyber-hack',
-    title: 'CODE HEIST: ALGORITHM VAULT',
-    category: 'Coding & Hacking',
+    title: 'HACKERS HEIST',
+    category: 'CTF Event',
     icon: Terminal,
     date: '10 SEPT // 10:00 AM',
     prize: '$2,500 PRIZE POOL',
@@ -14,18 +14,17 @@ const eventsData = [
     shortDesc: 'Crack high-security algorithmic encrypted vaults under extreme timed pressure.',
     fullDesc: 'Participants act as elite heist programmers tasked with bypassing multi-layer cybersecurity firewalls, decrypting quantum ciphers, and retrieving master cryptographic keys.',
     rules: [
-      'Bring your own development machine.',
-      'Languages permitted: C++, Python, JavaScript, Rust, Go.',
-      'Plagiarism or automated AI code generation bots will cause immediate lockdown.',
+      'Bring your own machine.',
+      
     ],
   },
   {
     id: 'ai-arena',
-    title: 'THE PROFESSOR’S AI NEURAL ARENA',
+    title: 'WEB-3 Hackthon',
     category: 'AI & Gaming',
     icon: Cpu,
     date: '10 SEPT // 01:30 PM',
-    prize: '$3,000 PRIZE POOL',
+    prize: '3,000 PRIZE POOL',
     team: '1-4 Members',
     shortDesc: 'Deploy autonomous LLM agents to orchestrate or defend against simulated high-stakes bank heists.',
     fullDesc: 'Build, fine-tune, and prompt-engineer AI neural network agents competing head-to-head in real-time strategic heist scenario simulations.',
@@ -36,7 +35,7 @@ const eventsData = [
   },
   {
     id: 'cyber-ctf',
-    title: 'RED TEAM CYBER CAPTURE THE FLAG',
+    title: 'Dectectyx',
     category: 'Coding & Hacking',
     icon: Shield,
     date: '10 SEPT // 03:00 PM',
@@ -51,7 +50,7 @@ const eventsData = [
   },
   {
     id: 'ui-cyberpunk',
-    title: 'DALI VISION: CYBERPUNK UI/UX',
+    title: 'Nagpur got Voilent',
     category: 'Design & Media',
     icon: Zap,
     date: '10 SEPT // 11:30 AM',
@@ -64,28 +63,13 @@ const eventsData = [
       'Assets generated must be original or open-source vector graphics.',
     ],
   },
-  {
-    id: 'heist-simulation',
-    title: 'OPERATION GOLDEN VAULT: HEIST SIM',
-    category: 'Heist Special',
-    icon: Trophy,
-    date: '10 SEPT // 05:00 PM',
-    prize: '$4,000 PRIZE POOL',
-    team: '3-5 Members',
-    shortDesc: 'The flagship physical + digital hybrid mystery maze & escape room challenge.',
-    fullDesc: 'Combine physical hardware IoT hack, laser evasion, logic puzzle solving, and rapid tactical coordination to escape with the gold bullion before SWAT entry.',
-    rules: [
-      'Strictest timed event of CYBERPUNK 2026.',
-      'All team members must wear red heist bandanas (provided on-site).',
-    ],
-  },
 ];
 
 const Events = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeModalEvent, setActiveModalEvent] = useState(null);
 
-  const categories = ['All', 'Coding & Hacking', 'AI & Gaming', 'Design & Media', 'Heist Special'];
+  const categories = ['All', 'Coding & Hacking', 'AI & Gaming', 'Design & Media'];
 
   const filteredEvents =
     selectedCategory === 'All'

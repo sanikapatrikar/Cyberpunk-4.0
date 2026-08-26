@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import SmokeCanvas from './components/SmokeCanvas';
 import CinematicSequence from './components/CinematicSequence';
@@ -9,13 +10,11 @@ import Navbar from './components/Navbar';
 import Countdown from './components/Countdown';
 import Events from './components/Events';
 import Crew from './components/Crew';
-import Gallery from './components/Gallery';
-import Registration from './components/Registration';
-import Contact from './components/Contact';
+import Gallery from "./Gallery";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function App() {
+function Home() {
   const [isNavVisible, setIsNavVisible] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
@@ -87,13 +86,22 @@ function App() {
         <Countdown />
         <Events />
         <Crew />
-        <Gallery />
-        <Registration />
       </main>
 
       {/* Footer & Contact */}
-      <Contact />
+
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/gallery" element={<Gallery />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -28,7 +28,7 @@ const Navbar = ({ visible = true }) => {
     { name: 'HOME', href: '#countdown-section' },
     { name: 'EVENTS', href: '#events-section' },
     { name: 'CREW', href: '#crew-section' },
-    { name: 'GALLERY', href: '#gallery-section' },
+    { name: 'GALLERY', href: '/gallery' },
     { name: 'REGISTER', href: '#registration-section' },
     { name: 'CONTACT', href: '#contact-section' },
   ];
