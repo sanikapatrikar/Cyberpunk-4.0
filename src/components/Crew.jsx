@@ -6,7 +6,7 @@ const crewMembers = [
   {
     name: 'Aditya Jadhav',
     codename: 'Coordinator',
-    image: '/assets/heist_dali_mask.jpg',
+    image: '/assets/crew/Aditya.jpg',
     bio: 'Architect behind the CYBERPUNK 2026 operation blueprint and system architecture.',
     socials: { linkedin: '#', insta: '#',  },
   },

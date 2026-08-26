@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
+import React, { useEffect, useState } from "react";
 import "./Gallery.css";
 
 const galleryImages = [
@@ -11,453 +10,428 @@ const galleryImages = [
   "/assets/gallery/6.jpg",
 ];
 
-export default function Gallery() {
-  const mountRef = useRef(null);
-  const [selectedImage, setSelectedImage] = useState(null);
+const evidenceData = [
+  {
+    id: "001",
+    title: "THE OPERATION BEGINS",
+    location: "CYBERPUNK HQ",
+    status: "VERIFIED",
+    type: "MISSION",
+  },
+  {
+    id: "002",
+    title: "THE CREW ASSEMBLES",
+    location: "MAIN HALL",
+    status: "CLASSIFIED",
+    type: "CREW",
+  },
+  {
+    id: "003",
+    title: "THE FIRST MOVE",
+    location: "EVENT ZONE",
+    status: "VERIFIED",
+    type: "ACTION",
+  },
+  {
+    id: "004",
+    title: "INSIDE THE OPERATION",
+    location: "CYBERPUNK ARENA",
+    status: "TOP SECRET",
+    type: "EVIDENCE",
+  },
+  {
+    id: "005",
+    title: "THE CROWD",
+    location: "MAIN STAGE",
+    status: "VERIFIED",
+    type: "OPERATION",
+  },
+  {
+    id: "006",
+    title: "MISSION COMPLETE",
+    location: "FINAL ZONE",
+    status: "ARCHIVED",
+    type: "FINAL",
+  },
+];
+
+function Gallery() {
+  const [selected, setSelected] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+  const [scan, setScan] = useState(true);
 
   useEffect(() => {
-    const container = mountRef.current;
-
-    if (!container) return;
-
-    const scene = new THREE.Scene();
-
-    // Camera
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      container.clientWidth / container.clientHeight,
-      0.1,
-      1000
-    );
-
-    camera.position.z = 10;
-
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-    });
-
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    renderer.setSize(
-      container.clientWidth,
-      container.clientHeight
-    );
-
-    container.appendChild(renderer.domElement);
-
-    // Main globe
-    const globe = new THREE.Group();
-    scene.add(globe);
-
-    // ------------------------------------------------
-    // GALLERY PHOTO TILES
-    // ------------------------------------------------
-
-    const radius = 3.4;
-
-    const textureLoader = new THREE.TextureLoader();
-
-    galleryImages.forEach((image, index) => {
-      const texture = textureLoader.load(image);
-
-      texture.colorSpace = THREE.SRGBColorSpace;
-
-      const material = new THREE.MeshBasicMaterial({
-        map: texture,
-        side: THREE.DoubleSide,
-        transparent: true,
-      });
-
-      const geometry = new THREE.PlaneGeometry(
-        1.15,
-        0.82
-      );
-
-      const photo = new THREE.Mesh(
-        geometry,
-        material
-      );
-
-      // Fibonacci sphere distribution
-      const phi =
-        Math.acos(
-          -1 +
-            (2 * (index + 0.5)) /
-              galleryImages.length
-        );
-
-      const theta =
-        Math.PI *
-        (1 + Math.sqrt(5)) *
-        index;
-
-      const x =
-        radius *
-        Math.sin(phi) *
-        Math.cos(theta);
-
-      const y =
-        radius *
-        Math.cos(phi);
-
-      const z =
-        radius *
-        Math.sin(phi) *
-        Math.sin(theta);
-
-      const position = new THREE.Vector3(
-        x,
-        y,
-        z
-      );
-
-      photo.position.copy(position);
-
-      // Make each photo face outward
-      const normal = position.clone().normalize();
-
-      photo.quaternion.setFromUnitVectors(
-        new THREE.Vector3(0, 0, 1),
-        normal
-      );
-
-      photo.userData.image = image;
-
-      globe.add(photo);
-    });
-
-    // ------------------------------------------------
-    // RED INNER GLOW
-    // ------------------------------------------------
-
-    const glowGeometry =
-      new THREE.SphereGeometry(3.25, 64, 64);
-
-    const glowMaterial =
-      new THREE.MeshBasicMaterial({
-        color: 0x320000,
-        transparent: true,
-        opacity: 0.28,
-        side: THREE.BackSide,
-      });
-
-    const glowSphere = new THREE.Mesh(
-      glowGeometry,
-      glowMaterial
-    );
-
-    globe.add(glowSphere);
-
-    // ------------------------------------------------
-    // LATITUDE / LONGITUDE WIRES
-    // ------------------------------------------------
-
-    const wireGeometry =
-      new THREE.SphereGeometry(
-        3.48,
-        32,
-        18
-      );
-
-    const wireMaterial =
-      new THREE.MeshBasicMaterial({
-        color: 0x550000,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.18,
-      });
-
-    const wireSphere = new THREE.Mesh(
-      wireGeometry,
-      wireMaterial
-    );
-
-    globe.add(wireSphere);
-
-    // ------------------------------------------------
-    // BACKGROUND PARTICLES
-    // ------------------------------------------------
-
-    const particleCount = 700;
-
-    const particlePositions = new Float32Array(
-      particleCount * 3
-    );
-
-    for (let i = 0; i < particleCount; i++) {
-      particlePositions[i * 3] =
-        (Math.random() - 0.5) * 25;
-
-      particlePositions[i * 3 + 1] =
-        (Math.random() - 0.5) * 18;
-
-      particlePositions[i * 3 + 2] =
-        (Math.random() - 0.5) * 15;
-    }
-
-    const particleGeometry =
-      new THREE.BufferGeometry();
-
-    particleGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(
-        particlePositions,
-        3
-      )
-    );
-
-    const particleMaterial =
-      new THREE.PointsMaterial({
-        color: 0x777777,
-        size: 0.025,
-        transparent: true,
-        opacity: 0.7,
-      });
-
-    const particles = new THREE.Points(
-      particleGeometry,
-      particleMaterial
-    );
-
-    scene.add(particles);
-
-    // ------------------------------------------------
-    // MOUSE INTERACTION
-    // ------------------------------------------------
-
-    let mouseX = 0;
-    let mouseY = 0;
-
-    const handleMouseMove = (event) => {
-      const rect =
-        container.getBoundingClientRect();
-
-      mouseX =
-        ((event.clientX - rect.left) /
-          rect.width -
-          0.5) *
-        2;
-
-      mouseY =
-        ((event.clientY - rect.top) /
-          rect.height -
-          0.5) *
-        2;
-    };
-
-    container.addEventListener(
-      "mousemove",
-      handleMouseMove
-    );
-
-    // ------------------------------------------------
-    // CLICK DETECTION
-    // ------------------------------------------------
-
-    const raycaster =
-      new THREE.Raycaster();
-
-    const mouse = new THREE.Vector2();
-
-    const handleClick = (event) => {
-      const rect =
-        container.getBoundingClientRect();
-
-      mouse.x =
-        ((event.clientX - rect.left) /
-          rect.width) *
-          2 -
-        1;
-
-      mouse.y =
-        -(
-          ((event.clientY - rect.top) /
-            rect.height) *
-            2 -
-          1
-        );
-
-      raycaster.setFromCamera(
-        mouse,
-        camera
-      );
-
-      const intersects =
-        raycaster.intersectObjects(
-          globe.children,
-          true
-        );
-
-      const photo = intersects.find(
-        (item) => item.object.userData.image
-      );
-
-      if (photo) {
-        setSelectedImage(
-          photo.object.userData.image
-        );
-      }
-    };
-
-    container.addEventListener(
-      "click",
-      handleClick
-    );
-
-    // ------------------------------------------------
-    // ANIMATION
-    // ------------------------------------------------
-
-    let animationFrame;
-
-    const animate = () => {
-      animationFrame =
-        requestAnimationFrame(animate);
-
-      // CONSTANT ROTATION SPEED
-      globe.rotation.y += 0.0018;
-
-      // Very subtle vertical movement
-      globe.rotation.x =
-        Math.sin(Date.now() * 0.00025) *
-        0.035;
-
-      // Mouse influence
-      globe.rotation.y +=
-        mouseX * 0.0005;
-
-      globe.rotation.x +=
-        mouseY * 0.0003;
-
-      particles.rotation.y += 0.00015;
-
-      renderer.render(
-        scene,
-        camera
-      );
-    };
-
-    animate();
-
-    // ------------------------------------------------
-    // RESPONSIVE
-    // ------------------------------------------------
-
-    const handleResize = () => {
-      if (!container) return;
-
-      const width =
-        container.clientWidth;
-
-      const height =
-        container.clientHeight;
-
-      camera.aspect =
-        width / height;
-
-      camera.updateProjectionMatrix();
-
-      renderer.setSize(
-        width,
-        height
-      );
-    };
-
-    window.addEventListener(
-      "resize",
-      handleResize
-    );
+    const timer = setTimeout(() => {
+      setLoaded(true);
+      setScan(false);
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.background = "#050505";
 
     return () => {
-      cancelAnimationFrame(
-        animationFrame
-      );
-
-      window.removeEventListener(
-        "resize",
-        handleResize
-      );
-
-      container.removeEventListener(
-        "mousemove",
-        handleMouseMove
-      );
-
-      container.removeEventListener(
-        "click",
-        handleClick
-      );
-
-      renderer.dispose();
-
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(
-          renderer.domElement
-        );
-      }
+      document.body.style.background = "";
     };
   }, []);
 
+  const openEvidence = (index) => {
+    setSelected(index);
+  };
+
+  const closeEvidence = () => {
+    setSelected(null);
+  };
+
   return (
-    <section
-      className="gallery-section"
-      id="gallery"
-    >
-      <div className="gallery-heading">
-        <div className="gallery-eyebrow">
-          CLASSIFIED ARCHIVE
+    <div className="heist-gallery">
+
+      {/* ================= BACKGROUND ================= */}
+
+      <div className="gallery-noise"></div>
+      <div className="gallery-grid"></div>
+      <div className="red-light red-light-one"></div>
+      <div className="red-light red-light-two"></div>
+
+      {/* ================= LOADING SCREEN ================= */}
+
+      {scan && (
+        <div className="archive-loader">
+          <div className="loader-content">
+
+            <div className="loader-mask">◉</div>
+
+            <div className="loader-title">
+              ACCESSING ARCHIVE
+            </div>
+
+            <div className="loader-subtitle">
+              CYBERPUNK // CLASSIFIED DATABASE
+            </div>
+
+            <div className="loader-bar">
+              <span></span>
+            </div>
+
+            <div className="loader-status">
+              DECRYPTING EVIDENCE...
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ================= HERO ================= */}
+
+      <section className="gallery-hero">
+
+        <div className="hero-code">
+          ARCHIVE // 2026 // 001
         </div>
 
+        <div className="hero-line"></div>
+
+        <p className="classified-label">
+          <span></span>
+          CLASSIFIED ARCHIVES
+          <span></span>
+        </p>
+
+        <h1>
+          THE <strong>HEIST</strong>
+          <br />
+          <span>FILES</span>
+        </h1>
+
+        <p className="hero-description">
+          A classified collection of moments captured
+          during the operation.
+        </p>
+
+        <div className="operation-status">
+          <span className="status-dot"></span>
+          OPERATION STATUS:
+          <b> COMPLETED</b>
+        </div>
+
+        <div className="scroll-indicator">
+          <span></span>
+          SCROLL TO ACCESS EVIDENCE
+        </div>
+
+      </section>
+
+      {/* ================= EVIDENCE WALL ================= */}
+
+      <section className="evidence-section">
+
+        <div className="section-header evidence-heading">
+
+          <div>
+            <span className="section-number">
+              02 //
+            </span>
+
+            <h2>
+              EVIDENCE
+              <span>WALL</span>
+            </h2>
+          </div>
+
+          <p>
+            SELECT AN EVIDENCE FILE
+            <br />
+            TO ACCESS CLASSIFIED DATA
+          </p>
+
+        </div>
+
+        <div className="evidence-wall">
+
+          <div className="wall-stamp">
+            TOP SECRET
+          </div>
+
+          <div className="wall-title">
+            OPERATION
+            <strong>CYBERPUNK</strong>
+          </div>
+
+          {/* Red connecting lines */}
+
+          <div className="evidence-string string-one"></div>
+          <div className="evidence-string string-two"></div>
+          <div className="evidence-string string-three"></div>
+
+          {galleryImages.map((image, index) => {
+
+            const evidence = evidenceData[index];
+
+            return (
+              <div
+                className={`evidence-card card-${index + 1}`}
+                key={image}
+              >
+
+                <div className="pin"></div>
+
+                <div className="evidence-photo">
+
+                  <img
+                    src={image}
+                    alt={evidence.title}
+                    loading="lazy"
+                  />
+
+                  <div className="photo-glitch"></div>
+
+                </div>
+
+                <div className="evidence-info">
+
+                  <div className="evidence-id">
+                    EVIDENCE #{evidence.id}
+                  </div>
+
+                  <h3>
+                    {evidence.title}
+                  </h3>
+
+                  <div className="evidence-meta">
+                    <span>
+                      {evidence.location}
+                    </span>
+
+                    <span className="verified">
+                      ● {evidence.status}
+                    </span>
+                  </div>
+                 </div>
+                </div>
+            );
+          })}
+
+        </div>
+
+      </section>
+
+      {/* ================= CLASSIFIED TIMELINE ================= */}
+
+      <section className="timeline-section">
+
+        <div className="section-header">
+
+          <div>
+            <span className="section-number">
+              03 //
+            </span>
+
+            <h2>
+              OPERATION
+              <span>TIMELINE</span>
+            </h2>
+          </div>
+
+        </div>
+
+        <div className="timeline">
+
+          <div className="timeline-line"></div>
+
+          {[
+            ["09:00", "THE CREW ARRIVES", "MISSION INITIATED"],
+            ["10:30", "THE OPERATION BEGINS", "ACCESS GRANTED"],
+            ["12:00", "FULL OPERATION", "ALL SYSTEMS ACTIVE"],
+            ["15:30", "FINAL PHASE", "MISSION COMPLETE"],
+          ].map((item, index) => (
+
+            <div
+              className="timeline-item"
+              key={item[0]}
+            >
+
+              <div className="timeline-dot">
+                {index + 1}
+              </div>
+
+              <div className="timeline-time">
+                {item[0]}
+              </div>
+
+              <div className="timeline-content">
+
+                <span>
+                  {item[2]}
+                </span>
+
+                <h3>
+                  {item[1]}
+                </h3>
+
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </section>
+
+      {/* ================= FINAL ================= */}
+
+      <section className="archive-complete">
+
+        <div className="complete-lines"></div>
+
+        <span className="section-number">
+          // END OF ARCHIVE //
+        </span>
+
         <h2>
-          THE <span>GALLERY</span>
+          MISSION
+          <strong>COMPLETE</strong>
         </h2>
 
         <p>
-          VISUAL RECORDS FROM THE OPERATION
+          ALL EVIDENCE HAS BEEN SUCCESSFULLY ARCHIVED.
         </p>
-      </div>
 
-      <div
-        ref={mountRef}
-        className="gallery-globe"
-      />
+        <div className="complete-stamp">
+          CYBERPUNK 2026
+          <br />
+          ARCHIVE VERIFIED
+        </div>
 
-      <div className="gallery-status">
-        <span className="status-dot" />
-        ARCHIVE // LIVE
-      </div>
+      </section>
 
-      {selectedImage && (
+      {/* ================= MODAL ================= */}
+
+      {selected !== null && (
         <div
-          className="gallery-modal"
-          onClick={() =>
-            setSelectedImage(null)
-          }
+          className="evidence-modal"
+          onClick={closeEvidence}
         >
+
           <div
-            className="gallery-modal-content"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
+            className="modal-file"
+            onClick={(e) => e.stopPropagation()}
           >
+
             <button
-              className="gallery-close"
-              onClick={() =>
-                setSelectedImage(null)
-              }
+              className="modal-close"
+              onClick={closeEvidence}
             >
               ×
             </button>
 
-            <img
-              src={selectedImage}
-              alt="Gallery"
-            />
+            <div className="modal-header">
+              <span>
+                CLASSIFIED FILE
+              </span>
+
+              <span>
+                EVIDENCE #{evidenceData[selected].id}
+              </span>
+            </div>
+
+            <div className="modal-image">
+
+              <img
+                src={galleryImages[selected]}
+                alt={evidenceData[selected].title}
+              />
+
+              <div className="modal-scanline"></div>
+
+            </div>
+
+            <div className="modal-details">
+
+              <span className="modal-type">
+                {evidenceData[selected].type}
+              </span>
+
+              <h2>
+                {evidenceData[selected].title}
+              </h2>
+
+              <div className="detail-grid">
+
+                <div>
+                  <small>LOCATION</small>
+                  <strong>
+                    {evidenceData[selected].location}
+                  </strong>
+                </div>
+
+                <div>
+                  <small>DATE</small>
+                  <strong>
+                    10 SEPTEMBER 2026
+                  </strong>
+                </div>
+
+                <div>
+                  <small>STATUS</small>
+                  <strong className="red">
+                    {evidenceData[selected].status}
+                  </strong>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
+
         </div>
       )}
-    </section>
+
+    </div>
   );
 }
+
+export default Gallery;

@@ -91,13 +91,24 @@ function Home() {
     </div>
   );
 }
+function GalleryPage() {
+  return (
+    <div className="relative min-h-screen bg-[#050505] text-gray-100 overflow-x-hidden">
+      <Navbar visible={true} />
+
+      <main className="relative z-20">
+        <Gallery />
+      </main>
+    </div>
+  );
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/gallery" element={<GalleryPage />} />
       </Routes>
     </BrowserRouter>
   );
