@@ -3,9 +3,9 @@ import { ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const crewMembers = [
   {
-<<<<<<< HEAD
+
     
-=======
+
     name: 'VEDANT GHUBADE',
     role: 'TECHNICAL HEAD',
     codename: 'CORE TEAM',
@@ -15,7 +15,7 @@ const crewMembers = [
       linkedin: 'https://www.linkedin.com/in/vedant-ghubade-96b734273?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
       instagram: 'https://www.instagram.com/vedant11054?igsi=aWx1ZnJ1OGg0dGI3' 
     },
->>>>>>> origin/core-team-update
+
   },
   {
     name: 'WANSH KUMBHALKAR',
@@ -34,14 +34,14 @@ const crewMembers = [
     codename: 'CORE TEAM',
     image: '/assets/anshul.jpg',
     bio: 'Leading the front-end visual storytelling and immersive scroll animations.',
-<<<<<<< HEAD
+
     socials: { linkedin: '#', insta: '#',  },
-=======
+
     socials: { 
       linkedin: 'https://www.linkedin.com/in/anshul-vairagade-15582b201?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
       instagram: 'https://www.instagram.com/anshull.dev?igsi=MTJ5djR5ejh0MXVtag==' 
     },
->>>>>>> origin/core-team-update
+
   },
   {
     name: 'TANUSH BAMNOTE',
@@ -49,29 +49,15 @@ const crewMembers = [
     codename: 'CORE TEAM',
     image: '/assets/tanush.jpg',
     bio: 'Managing event allocations, prize distribution, and multi-venue coordination.',
-<<<<<<< HEAD
+
     socials: { linkedin: '#', insta: '#',  },
-  },
-   {
-    name: 'Aditya Jadhav',
-    role: 'Coordinator',
-    image: '/assets/heist_dali_mask.jpg',
-    bio: 'Architect behind the CYBERPUNK 2026 operation blueprint and system architecture.',
-    socials: { linkedin: '#', insta: '#',  },
-  },
-   {
-    name: 'Aditya Jadhav',
-    role: 'Coordinator',
-    image: '/assets/heist_dali_mask.jpg',
-    bio: 'Architect behind the CYBERPUNK 2026 operation blueprint and system architecture.',
-    socials: { linkedin: '#', insta: '#',  },
-=======
+
     socials: { 
       linkedin: 'https://www.linkedin.com/in/tanush-bamnote?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
       instagram: 'https://www.instagram.com/thenooshyyyt?igsi=d3BjN2M5a21rbGx2' 
     },
->>>>>>> origin/core-team-update
   },
+  
 ];
 
 const Crew = () => {
