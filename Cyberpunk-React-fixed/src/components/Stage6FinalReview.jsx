@@ -1,6 +1,6 @@
 import React from 'react';
 import { EVENT_DATABASE } from '../constants/eventData';
-
+ 
 export default function Stage6FinalReview({
   selectedEventKey,
   selectedTeamSize,
@@ -11,7 +11,7 @@ export default function Stage6FinalReview({
   isSubmitting,
 }) {
   const ev = selectedEventKey ? EVENT_DATABASE[selectedEventKey] : null;
-
+ 
   const memberBlocks = [];
   for (let i = 1; i <= selectedTeamSize; i++) {
     const m = formData[`member_${i}`] || {};
@@ -27,12 +27,12 @@ export default function Stage6FinalReview({
         <strong style={{ color: '#fff' }}>Member 0{i}:</strong> {m.fullName || 'N/A'} |{' '}
         {m.email || ''} | {m.phone || ''} <br />
         <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-          {m.college || ''} ({m.branch || ''}, {m.year || ''}, Roll: {m.roll || ''})
+          {m.college || ''} ({m.branch || ''}, {m.year || ''})
         </span>
       </div>
     );
   }
-
+ 
   return (
     <section className="stage-section active">
       <div className="section-headline">
@@ -42,7 +42,7 @@ export default function Stage6FinalReview({
           Verify all operative data and payment clearance before final confirmation.
         </p>
       </div>
-
+ 
       <div className="review-dossier-panel">
         <div className="review-section-block">
           <div className="review-header-flex">
@@ -68,7 +68,7 @@ export default function Stage6FinalReview({
             </div>
           </div>
         </div>
-
+ 
         <div className="review-section-block">
           <div className="review-header-flex">
             <span className="review-subhead">02. PARTICIPANT DOSSIERS</span>
@@ -78,7 +78,7 @@ export default function Stage6FinalReview({
           </div>
           {memberBlocks}
         </div>
-
+ 
         <div className="review-section-block">
           <div className="review-header-flex">
             <span className="review-subhead">03. PAYMENT CLEARANCE</span>
@@ -108,7 +108,7 @@ export default function Stage6FinalReview({
           </div>
         </div>
       </div>
-
+ 
       <div className="action-buttons-group">
         <button
           onClick={() => onGoToStep(5)}
