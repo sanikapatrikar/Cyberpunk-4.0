@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import Events from './components/Events';
 import Crew from './components/Crew';
 import Gallery from "./Gallery";
+import Registration from "./Registration";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -108,6 +109,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/registration" element={<Registration />} />
         <Route path="/gallery" element={<GalleryPage />} />
       </Routes>
     </BrowserRouter>

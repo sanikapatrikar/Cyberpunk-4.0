@@ -32,7 +32,7 @@ const Navbar = ({ visible = true }) => {
     { name: 'EVENTS', href: '/#events-section' },
     { name: 'CREW', href: '/#crew-section' },
     { name: 'GALLERY', href: '/gallery' },
-    { name: 'REGISTER', href: '/#registration-section' },
+    { name: 'REGISTER', href: '/registration' },
   ];
 
   const handleNavigation = (href) => {
@@ -44,6 +44,12 @@ const Navbar = ({ visible = true }) => {
       window.scrollTo(0, 0);
       return;
     }
+    // Registration page
+if (href === '/registration') {
+  navigate('/registration');
+  window.scrollTo(0, 0);
+  return;
+}
 
     // Home
     if (href === '/') {
