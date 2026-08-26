@@ -2,4 +2,5 @@
 // Example:
 // export const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/XXXXXXXX/exec";
 
-export const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxzC4-tb2v8yr0cwJi9UtaEF7-SkdrtM6t4Gbq6q3-QyNAyhVUkLFQS-XYmTiUqr3c_/exec";
+export const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbxzC4-tb2v8yr0cwJi9UtaEF7-SkdrtM6t4Gbq6q3-QyNAyhVUkLFQS-XYmTiUqr3c_/exec";

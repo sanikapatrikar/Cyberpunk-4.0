@@ -7,10 +7,10 @@ const crewMembers = [
     
 
     name: 'VEDANT GHUBADE',
-    role: 'TECHNICAL HEAD',
-    codename: 'CORE TEAM',
+    role: 'Mentor',
+    
     image: '/assets/vedant.jpg', 
-    bio: 'Commanding tactical defense networks and physical vault entry protocols.',
+    
     socials: { 
       linkedin: 'https://www.linkedin.com/in/vedant-ghubade-96b734273?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
       instagram: 'https://www.instagram.com/vedant11054?igsi=aWx1ZnJ1OGg0dGI3' 
@@ -19,10 +19,9 @@ const crewMembers = [
   },
   {
     name: 'WANSH KUMBHALKAR',
-    role: 'TECHNICAL TEAM',
-    codename: 'CORE TEAM',
+    role: 'Mentor',
     image: '/assets/wansh.jpg',
-    bio: 'Architect behind the CYBERPUNK 2026 operation blueprint and system architecture.',
+    
     socials: { 
       linkedin: 'https://www.linkedin.com/in/wansh-kumbhalkar-85b97b280?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
       instagram: 'https://www.instagram.com/wansh_kumbhalkar?igsi=MWIyMjY5Mjg1MG5zcw==' 
@@ -30,10 +29,10 @@ const crewMembers = [
   },
   {
     name: 'ANSHUL VAIRAGADE',
-    role: 'TECHNICAL TEAM',
-    codename: 'CORE TEAM',
+    role: 'Mentor',
+    
     image: '/assets/anshul.jpg',
-    bio: 'Leading the front-end visual storytelling and immersive scroll animations.',
+    
 
     socials: { linkedin: '#', insta: '#',  },
 
@@ -45,10 +44,9 @@ const crewMembers = [
   },
   {
     name: 'TANUSH BAMNOTE',
-    role: 'TECHNICAL TEAM',
-    codename: 'CORE TEAM',
+    role: 'Mentor',
+    
     image: '/assets/tanush.jpg',
-    bio: 'Managing event allocations, prize distribution, and multi-venue coordination.',
 
     socials: { linkedin: '#', insta: '#',  },
 
