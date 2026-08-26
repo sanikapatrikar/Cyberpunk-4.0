@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SmokeCanvas from './components/SmokeCanvas';
 import CinematicSequence from './components/CinematicSequence';
 import Navbar from './components/Navbar';
-import Countdown from './components/Countdown';
 import Events from './components/Events';
 import Crew from './components/Crew';
 import Gallery from "./Gallery";
@@ -69,13 +68,13 @@ function Home() {
         /* Reduced motion accessible static header fallback */
         <div className="py-24 text-center px-4 bg-black border-b border-red-900">
           <div className="flex items-center justify-center gap-4 mb-4">
-            <span className="font-bebas text-7xl text-white">CYBER</span>
-            <span className="font-bebas text-6xl text-red-600">|</span>
+            <span className="font-compacta text-7xl text-white">CYBER</span>
+            <span className="font-compacta text-6xl text-red-600">|</span>
             <div className="bg-red-600 px-6 py-1 rounded">
-              <span className="font-bebas text-7xl text-white">PUNK</span>
+              <span className="font-compacta text-7xl text-white">PUNK</span>
             </div>
           </div>
-          <p className="font-bebas text-3xl text-red-500 tracking-widest">
+          <p className="font-compacta text-3xl text-red-500 tracking-widest">
             10 SEPTEMBER 2026 // REDUCED MOTION MODE
           </p>
         </div>
@@ -83,7 +82,6 @@ function Home() {
 
       {/* Event Website Sections (Revealed after or below intro) */}
       <main className="relative z-20">
-        <Countdown />
         <Events />
         <Crew />
       </main>
