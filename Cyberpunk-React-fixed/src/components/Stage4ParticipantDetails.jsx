@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BRANCH_OPTIONS, YEAR_OPTIONS } from '../constants/eventData';
-
+ 
 export default function Stage4ParticipantDetails({
   selectedTeamSize,
   formData,
@@ -9,7 +9,7 @@ export default function Stage4ParticipantDetails({
   onNext,
 }) {
   const [errors, setErrors] = useState({});
-
+ 
   const handleTeamNameChange = (e) => {
     const val = e.target.value;
     setFormData((prev) => ({ ...prev, teamName: val }));
@@ -17,7 +17,7 @@ export default function Stage4ParticipantDetails({
       setErrors((prev) => ({ ...prev, teamName: false }));
     }
   };
-
+ 
   const handleMemberChange = (memberIndex, field, value) => {
     setFormData((prev) => {
       const currentMember = prev[`member_${memberIndex}`] || {};
@@ -29,30 +29,34 @@ export default function Stage4ParticipantDetails({
         },
       };
     });
-
+ 
     const errKey = `member_${memberIndex}_${field}`;
     if (errors[errKey]) {
       setErrors((prev) => ({ ...prev, [errKey]: false }));
     }
   };
-
+ 
+  // Used to reject "garbage" input (e.g. "1234", "....", "     ")
+  // in fields that must contain a real name/place - i.e. at least one letter.
+  const hasLetter = /[a-zA-Z]/;
+ 
   const validateAndProceed = () => {
     const newErrors = {};
     let isValid = true;
-
+ 
     // Validate Team Name
-    if (!formData.teamName || !formData.teamName.trim()) {
+    if (!formData.teamName || !formData.teamName.trim() || !hasLetter.test(formData.teamName)) {
       newErrors.teamName = true;
       isValid = false;
     }
-
+ 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^[0-9]{10}$/;
-
+ 
     for (let i = 1; i <= selectedTeamSize; i++) {
       const mem = formData[`member_${i}`] || {};
-
-      if (!mem.fullName || !mem.fullName.trim()) {
+ 
+      if (!mem.fullName || !mem.fullName.trim() || !hasLetter.test(mem.fullName)) {
         newErrors[`member_${i}_fullName`] = true;
         isValid = false;
       }
@@ -64,7 +68,7 @@ export default function Stage4ParticipantDetails({
         newErrors[`member_${i}_phone`] = true;
         isValid = false;
       }
-      if (!mem.college || !mem.college.trim()) {
+      if (!mem.college || !mem.college.trim() || !hasLetter.test(mem.college)) {
         newErrors[`member_${i}_college`] = true;
         isValid = false;
       }
@@ -76,23 +80,19 @@ export default function Stage4ParticipantDetails({
         newErrors[`member_${i}_year`] = true;
         isValid = false;
       }
-      if (!mem.roll || !mem.roll.trim()) {
-        newErrors[`member_${i}_roll`] = true;
-        isValid = false;
-      }
     }
-
+ 
     setErrors(newErrors);
-
+ 
     if (isValid) {
       onNext();
     }
   };
-
+ 
   const memberCards = [];
   for (let i = 1; i <= selectedTeamSize; i++) {
     const memData = formData[`member_${i}`] || {};
-
+ 
     memberCards.push(
       <div key={i} className="form-group-card">
         <div className="form-group-header">
@@ -121,7 +121,7 @@ export default function Stage4ParticipantDetails({
               Full name required.
             </span>
           </div>
-
+ 
           <div className="input-field-wrapper">
             <label className="field-label">
               Email Address <span className="req">*</span>
@@ -141,7 +141,7 @@ export default function Stage4ParticipantDetails({
               Valid email required.
             </span>
           </div>
-
+ 
           <div className="input-field-wrapper">
             <label className="field-label">
               Phone Number <span className="req">*</span>
@@ -162,7 +162,7 @@ export default function Stage4ParticipantDetails({
               10-digit phone required.
             </span>
           </div>
-
+ 
           <div className="input-field-wrapper">
             <label className="field-label">
               College Name <span className="req">*</span>
@@ -182,7 +182,7 @@ export default function Stage4ParticipantDetails({
               College name required.
             </span>
           </div>
-
+ 
           <div className="input-field-wrapper">
             <label className="field-label">
               Branch <span className="req">*</span>
@@ -207,7 +207,7 @@ export default function Stage4ParticipantDetails({
               Select a branch.
             </span>
           </div>
-
+ 
           <div className="input-field-wrapper">
             <label className="field-label">
               Academic Year <span className="req">*</span>
@@ -232,31 +232,11 @@ export default function Stage4ParticipantDetails({
               Select year.
             </span>
           </div>
-
-          <div className="input-field-wrapper">
-            <label className="field-label">
-              Roll Number <span className="req">*</span>
-            </label>
-            <input
-              type="text"
-              className={`cyber-input ${errors[`member_${i}_roll`] ? 'invalid' : ''}`}
-              placeholder="Roll / PRN Number"
-              value={memData.roll || ''}
-              onChange={(e) => handleMemberChange(i, 'roll', e.target.value)}
-            />
-            <span
-              className={`field-error-msg ${
-                errors[`member_${i}_roll`] ? 'visible' : ''
-              }`}
-            >
-              Roll number required.
-            </span>
-          </div>
         </div>
       </div>
     );
   }
-
+ 
   return (
     <section className="stage-section active">
       <div className="section-headline">
@@ -266,7 +246,7 @@ export default function Stage4ParticipantDetails({
           Fill in complete identity information for all team operatives.
         </p>
       </div>
-
+ 
       <form onSubmit={(e) => e.preventDefault()}>
         <div className="form-grid-layout">
           <div className="form-group-card">
@@ -290,10 +270,10 @@ export default function Stage4ParticipantDetails({
               </span>
             </div>
           </div>
-
+ 
           {memberCards}
         </div>
-
+ 
         <div className="action-buttons-group">
           <button type="button" onClick={onBack} className="cyber-btn cyber-btn-secondary">
             ← <span>BACK: TEAM SIZE</span>
