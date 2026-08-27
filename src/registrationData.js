@@ -28,25 +28,25 @@ export const TEAM_SIZE_DATABASE = {
     label: "SOLO",
     count: 1,
     amount: 80,
-    upi: "upi://pay?pa=YOUR_UPI_ID&pn=CYBERPUNK&am=80&cu=INR",
+    upi: "upi://pay?pa=9981108875@ptyes&pn=CYBERPUNK&am=80&cu=INR",
   },
   DUO: {
     label: "DUO",
     count: 2,
     amount: 140,
-    upi: "upi://pay?pa=YOUR_UPI_ID&pn=CYBERPUNK&am=140&cu=INR",
+    upi: "upi://pay?pa=9981108875@ptyes&pn=CYBERPUNK&am=140&cu=INR",
   },
   TRIO: {
     label: "TRIO",
     count: 3,
     amount: 210,
-    upi: "upi://pay?pa=YOUR_UPI_ID&pn=CYBERPUNK&am=210&cu=INR",
+    upi: "upi://pay?pa=9981108875@ptyes&pn=CYBERPUNK&am=210&cu=INR",
   },
   SQUAD: {
     label: "SQUAD",
     count: 4,
     amount: 280,
-    upi: "upi://pay?pa=YOUR_UPI_ID&pn=CYBERPUNK&am=280&cu=INR",
+    upi: "upi://pay?pa=9981108875@ptyes&pn=CYBERPUNK&am=280&cu=INR",
   },
  
 };

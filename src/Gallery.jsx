@@ -259,66 +259,7 @@ function Gallery() {
 
       {/* ================= CLASSIFIED TIMELINE ================= */}
 
-      <section className="timeline-section">
-
-        <div className="section-header">
-
-          <div>
-            <span className="section-number">
-              03 //
-            </span>
-
-            <h2>
-              OPERATION
-              <span>TIMELINE</span>
-            </h2>
-          </div>
-
-        </div>
-
-        <div className="timeline">
-
-          <div className="timeline-line"></div>
-
-          {[
-            ["09:00", "THE CREW ARRIVES", "MISSION INITIATED"],
-            ["10:30", "THE OPERATION BEGINS", "ACCESS GRANTED"],
-            ["12:00", "FULL OPERATION", "ALL SYSTEMS ACTIVE"],
-            ["15:30", "FINAL PHASE", "MISSION COMPLETE"],
-          ].map((item, index) => (
-
-            <div
-              className="timeline-item"
-              key={item[0]}
-            >
-
-              <div className="timeline-dot">
-                {index + 1}
-              </div>
-
-              <div className="timeline-time">
-                {item[0]}
-              </div>
-
-              <div className="timeline-content">
-
-                <span>
-                  {item[2]}
-                </span>
-
-                <h3>
-                  {item[1]}
-                </h3>
-
-              </div>
-
-            </div>
-
-          ))}
-
-        </div>
-
-      </section>
+      
 
       {/* ================= FINAL ================= */}
 
