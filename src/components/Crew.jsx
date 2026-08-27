@@ -58,8 +58,158 @@ const crewMembers = [
   
 ];
 
+
+// nweeww
+// =====================================================
+// NEW CORE CREW FROM DEVELOPMENT BRANCH
+// =====================================================
+
+const coreCrewMembers = [
+  {
+    name: 'Aditya Jadhav',
+    role: 'Coordinator',
+    image: '/core_team_images/Aditya Jadhav (Coordinator).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/aditya-jadhav-b7463030b',
+      instagram: 'https://www.instagram.com/aditya_jadhav15',
+    },
+  },
+
+  {
+    name: 'Sana Sheware',
+    role: 'Co-Coordinator',
+    image: '/core_team_images/Sana Sheware (Co-Coordinator).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/sana-sheware-4561ba332',
+      instagram: 'https://www.instagram.com/sana_r_sheware',
+    },
+  },
+
+  {
+    name: 'Ketan Mahant',
+    role: 'Co-Coordinator',
+    image: '/core_team_images/Ketan Mahant (Co-Coordinator).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/ketan-mahant-50a029386/',
+      instagram: 'https://www.instagram.com/ketan_mahant/',
+    },
+  },
+
+  {
+    name: 'Sanika Patrikar',
+    role: 'Technical Head',
+    image: '/core_team_images/Sanika Patrikar (Technical Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/sanika-patrikar-4a3456331',
+      instagram: 'https://www.instagram.com/patrikar.sanikaa',
+    },
+  },
+
+  {
+    name: 'Ved Korde',
+    role: 'Technical Co-Head',
+    image: '/core_team_images/Ved Korde (Technical Co-Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/vedkorde19',
+      instagram: 'https://www.instagram.com/ved_korde',
+    },
+  },
+
+  {
+    name: 'Harsha Rokade',
+    role: 'Finance Head',
+    image: '/core_team_images/Harsha Rokade (Finance Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/harsha-rokade-41b477339',
+      instagram: 'https://www.instagram.com/harshaa_rokade',
+    },
+  },
+
+  {
+    name: 'Harshada Thakre',
+    role: 'Registration Head',
+    image: '/core_team_images/Harshada Thakre (Registration Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/harshada-thakre-8b4273322',
+      instagram: 'https://www.instagram.com/ha_rshada016',
+    },
+  },
+
+  {
+    name: 'Lokeshni Burde',
+    role: 'Registration Co-Head',
+    image: '/core_team_images/Lokeshni Burde (Registration Co_Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/lokeshni-burde-33a6792b4',
+      instagram: 'https://www.instagram.com/_lokeshni.burde_',
+    },
+  },
+
+  {
+    name: 'Ayush Malvi',
+    role: 'Management Head',
+    image: '/core_team_images/Ayush Malvi (Management Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/ayush-malvi-54647636a',
+      instagram: 'https://www.instagram.com/ayushhm_01',
+    },
+  },
+
+  {
+    name: 'Anushka Waldekar',
+    role: 'Media Head',
+    image: '/core_team_images/Anushka Waldekar (Media Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/anushka-waldekar-036a8a399',
+      instagram: 'https://www.instagram.com/_anu.shkaaa',
+    },
+  },
+
+  {
+    name: 'Trishti More',
+    role: 'Promotion Head',
+    image: '/core_team_images/Trishti More (Promotion Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/trishti-more-50a483331',
+      instagram: 'https://www.instagram.com/thatthickchick.__',
+    },
+  },
+
+  {
+    name: 'Jagruti Chore',
+    role: 'Promotion Co-Head',
+    image: '/core_team_images/Jagruti Chore (Promotion Co-Head).png',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/jagruti-chore-895839360/',
+      instagram: 'https://www.instagram.com/jagrutiiiii25/',
+    },
+  },
+
+  {
+    name: 'Vidhi Ayalwar',
+    role: 'Documentation Head',
+    image: '/core_team_images/Vidhi Ayalwar (Documentation Head).jpeg',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/vidhi-ayalwar-491470330',
+      instagram: 'https://www.instagram.com/vidhi_2803',
+    },
+  },
+];
+
+
+//end
+
 const Crew = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeMember, setActiveMember] = useState(null);
+
+const toggleMemberActive = (name) => {
+  setActiveMember((prev) =>
+    prev === name ? null : name
+  );
+};
+
+
 
   const prevCard = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? crewMembers.length - 1 : prevIndex - 1));
@@ -169,7 +319,208 @@ const Crew = () => {
 
         </div>
       </div>
+
+{/* =====================================================
+    NEW CORE CREW SECTION
+    ADDED FROM DEVELOPMENT BRANCH
+===================================================== */}
+
+<div className="mt-32">
+
+  {/* NEW CREW HEADING */}
+
+  <div className="text-center mb-16">
+
+    <p className="font-mono-cyber text-red-500 text-sm tracking-widest uppercase mb-2">
+      // OPERATIVES BEHIND THE OPERATION
+    </p>
+
+    <h2 className="font-bebas text-5xl sm:text-7xl tracking-widest">
+      CORE{' '}
+      <span className="text-red-600 text-glow-red">
+        CREW
+      </span>
+    </h2>
+
+  </div>
+
+  {/* NEW CREW CARDS */}
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+    {coreCrewMembers.map((member) => {
+
+      const isActive = activeMember === member.name;
+
+      return (
+        <div
+          key={member.name}
+          onClick={() => toggleMemberActive(member.name)}
+          className={`group relative bg-zinc-950 border rounded-2xl overflow-hidden transition-all duration-300 flex flex-col justify-between cursor-pointer ${
+            isActive
+              ? 'border-red-600 shadow-[0_0_30px_rgba(230,0,0,0.3)] -translate-y-2'
+              : 'border-zinc-800 hover:border-red-600 shadow-[0_0_20px_rgba(0,0,0,0.8)] hover:shadow-[0_0_30px_rgba(230,0,0,0.3)] hover:-translate-y-2'
+          }`}
+        >
+
+          {/* MEMBER IMAGE */}
+
+          <div className="relative h-72 w-full bg-zinc-900 overflow-hidden">
+
+            <img
+              src={member.image}
+              alt={member.name}
+              className={`w-full h-full object-cover object-top transition-transform duration-500 filter contrast-110 ${
+                isActive
+                  ? 'scale-105 grayscale-0'
+                  : 'grayscale group-hover:grayscale-0 group-hover:scale-105'
+              }`}
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/30 to-transparent" />
+
+            {/* VERIFIED CREW */}
+
+            <span className="absolute top-3 right-3 bg-red-950/80 border border-red-600/60 text-red-400 font-mono-cyber text-[10px] px-2.5 py-1 rounded-md tracking-widest flex items-center gap-1">
+
+              <ShieldCheck size={12} />
+
+              VERIFIED CREW
+
+            </span>
+
+          </div>
+
+          {/* MEMBER INFORMATION */}
+
+          <div className="p-6 flex flex-col justify-between flex-1">
+
+            <div>
+
+              <p className="font-mono-cyber text-xs text-red-500 font-bold mb-1 tracking-wider uppercase">
+                // {member.role}
+              </p>
+
+              <h3
+                className={`font-bebas text-3xl tracking-wider transition-colors mb-1 ${
+                  isActive
+                    ? 'text-red-500'
+                    : 'text-white group-hover:text-red-500'
+                }`}
+              >
+                {member.name}
+              </h3>
+
+              <p className="font-mono-cyber text-xs text-gray-400 mb-4">
+                {member.role}
+              </p>
+
+            </div>
+
+            {/* SOCIAL LINKS */}
+
+            <div className="flex items-center gap-3 pt-4 border-t border-zinc-800">
+
+              {/* LINKEDIN */}
+
+              {member.socials.linkedin && (
+                <a
+                  href={member.socials.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="p-2 bg-zinc-900 hover:bg-red-600 text-gray-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+                  title={`${member.name} LinkedIn Profile`}
+                  aria-label={`${member.name} LinkedIn Profile`}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2v7h-4v-7a6 6 0 0 1 6-6z" />
+
+                    <rect
+                      width="4"
+                      height="12"
+                      x="2"
+                      y="9"
+                    />
+
+                    <circle
+                      cx="4"
+                      cy="4"
+                      r="2"
+                    />
+                  </svg>
+                </a>
+              )}
+
+              {/* INSTAGRAM */}
+
+              {member.socials.instagram && (
+                <a
+                  href={member.socials.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="p-2 bg-zinc-900 hover:bg-red-600 text-gray-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+                  title={`${member.name} Instagram Profile`}
+                  aria-label={`${member.name} Instagram Profile`}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect
+                      width="20"
+                      height="20"
+                      x="2"
+                      y="2"
+                      rx="5"
+                      ry="5"
+                    />
+
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+
+                    <line
+                      x1="17.5"
+                      x2="17.51"
+                      y1="6.5"
+                      y2="6.5"
+                    />
+                  </svg>
+                </a>
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+      );
+    })}
+
+  </div>
+
+</div>
+
     </section>
+
+
+
+
   );
 };
 
