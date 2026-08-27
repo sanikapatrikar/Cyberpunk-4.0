@@ -125,8 +125,8 @@ const Registration = () => {
             <div className="absolute top-0 inset-x-8 h-[2px] bg-gradient-to-r from-transparent via-red-600 to-transparent" />
 
             {errorMessage && (
-              <div className="mb-6 p-4 bg-red-950/80 border border-red-600 rounded-xl text-red-400 font-mono-cyber text-xs flex items-center gap-3">
-                <AlertCircle size={18} />
+              <div className="mb-6 p-4 bg-red-950/80 border border-red-600 rounded-xl text-red-400 font-mono-cyber text-[13px] flex items-center gap-3">
+                <AlertCircle size={30} />
                 <span>{errorMessage}</span>
               </div>
             )}
