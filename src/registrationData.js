@@ -48,28 +48,23 @@ export const TEAM_SIZE_DATABASE = {
     amount: 280,
     upi: "upi://pay?pa=YOUR_UPI_ID&pn=CYBERPUNK&am=280&cu=INR",
   },
-  FIVE: {
-    label: "TEAM OF FIVE",
-    count: 5,
-    amount: 350,
-    upi: "upi://pay?pa=YOUR_UPI_ID&pn=CYBERPUNK&am=350&cu=INR",
-  },
+ 
 };
 
 export const BRANCH_OPTIONS = [
-  "CSE / CE",
+  "CSE [CS]",
+  "CE",
   "IT",
-  "AI / ML",
+  "AI ",
   "Data Science",
   "IoT",
   "Mechanical",
   "Civil",
-  "Electronics",
+  "ETC",
   "Electrical",
   "Robotics & AI",
   "CSBS",
   "B.Voc",
-  "Other",
 ];
 
 export const YEAR_OPTIONS = [
@@ -77,7 +72,7 @@ export const YEAR_OPTIONS = [
   "2nd Year",
   "3rd Year",
   "4th Year",
-  "Other",
+  
 ];
 
 export function getTeamSizeConfig(key) {

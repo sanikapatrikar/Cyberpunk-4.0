@@ -10,7 +10,7 @@ export default function Stage3TeamSize({ selectedEventKey, selectedTeamSize, onS
     { size: 2, label: 'Duo (2 Members)' },
     { size: 3, label: 'Trio (3 Members)' },
     { size: 4, label: 'Squad (4 Members)' },
-    { size: 5, label: 'Team of Five (5)' },
+    
   ];
 
   return (

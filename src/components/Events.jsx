@@ -70,7 +70,6 @@ const Events = () => {
   const [activeModalEvent, setActiveModalEvent] = useState(null);
 
   const categories = ['All', 'Coding & Hacking', 'AI & Gaming', 'Design & Media'];
-
   const filteredEvents =
     selectedCategory === 'All'
       ? eventsData

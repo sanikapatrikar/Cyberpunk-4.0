@@ -676,7 +676,7 @@ function Registration() {
                     e.target.value
                   )
                 }
-                placeholder="Optional crew name"
+                placeholder="Crew name"
                 maxLength={50}
               />
             </label>
