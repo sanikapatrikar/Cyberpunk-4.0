@@ -84,13 +84,37 @@ const Events = () => {
     setActiveModalEvent(null);
   };
 
+  //const handleRegisterClick = (eventId) => {
+  //  closeModal();
+  //  const regSection = document.getElementById('registration-section');
+  //  if (regSection) {
+   //   regSection.scrollIntoView({ behavior: 'smooth' });
+  //  }
+ //};
+
+
+//start
   const handleRegisterClick = (eventId) => {
-    closeModal();
-    const regSection = document.getElementById('registration-section');
-    if (regSection) {
-      regSection.scrollIntoView({ behavior: 'smooth' });
-    }
+  closeModal();
+
+  const eventMap = {
+    'cyber-hack': 'HEIST',
+    'ai-arena': 'WEB3',
+    'cyber-ctf': 'DETECTYX',
+    'ui-cyberpunk': 'NGV',
   };
+
+  const registrationEvent = eventMap[eventId];
+
+  if (registrationEvent) {
+    window.location.href = `/registration?event=${registrationEvent}`;
+  } else {
+    window.location.href = '/registration';
+  }
+};
+
+// done
+
 
   return (
     <section id="events-section" className="relative py-24 bg-[#050505] text-white border-t border-zinc-900">
