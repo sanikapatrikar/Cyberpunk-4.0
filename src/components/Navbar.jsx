@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Volume2, VolumeX, ShieldAlert } from 'lucide-react';
-import { toggleCyberpunkAudio } from '../utils/audio';
+import { Menu, X, ShieldAlert } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = ({ visible = true }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAudioActive, setIsAudioActive] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const location = useLocation();
@@ -20,11 +18,6 @@ const Navbar = ({ visible = true }) => {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleAudioToggle = () => {
-    const active = toggleCyberpunkAudio();
-    setIsAudioActive(active);
-  };
 
   // Navigation links
   const navLinks = [
@@ -45,11 +38,11 @@ const Navbar = ({ visible = true }) => {
       return;
     }
     // Registration page
-if (href === '/registration') {
-  navigate('/registration');
-  window.scrollTo(0, 0);
-  return;
-}
+    if (href === '/registration') {
+      navigate('/registration');
+      window.scrollTo(0, 0);
+      return;
+    }
 
     // Home
     if (href === '/') {
@@ -106,17 +99,16 @@ if (href === '/registration') {
         {/* Brand Logo */}
         <button
           onClick={() => handleNavigation('/')}
-          className="flex items-center gap-2 group cursor-pointer"
+          className="flex items-center group cursor-pointer"
         >
           <span className="font-bebas text-2xl tracking-wider text-white">
             CYBER
           </span>
 
-          <span className="font-bebas text-xl text-red-600">
-            |
-          </span>
+          {/* The Line - We use 'relative' and 'top' to force it to move */}
+          <div className="w-[3px] h-5 bg-red-600 mx-2 relative -top-[2px]" />
 
-          <span className="font-bebas text-2xl tracking-wider text-white bg-red-600 px-2 py-0.5 rounded-sm">
+          <span className="font-bebas text-2xl tracking-wider text-white bg-red-600 px-1.5 py-0.5 rounded-sm">
             PUNK
           </span>
         </button>
@@ -140,27 +132,6 @@ if (href === '/registration') {
 
         {/* Action Controls */}
         <div className="flex items-center gap-4">
-
-          {/* Audio */}
-          <button
-            onClick={handleAudioToggle}
-            className={`p-2.5 rounded-full border transition-all duration-300 flex items-center gap-2 font-mono-cyber text-xs cursor-pointer ${
-              isAudioActive
-                ? 'bg-red-600/20 border-red-600 text-red-400 shadow-[0_0_15px_rgba(230,0,0,0.4)] animate-pulse'
-                : 'bg-zinc-900/60 border-zinc-700/60 text-gray-400 hover:text-white'
-            }`}
-            title="Toggle Atmospheric Synth Audio"
-          >
-            {isAudioActive ? (
-              <Volume2 size={18} />
-            ) : (
-              <VolumeX size={18} />
-            )}
-
-            <span className="hidden sm:inline">
-              {isAudioActive ? 'AUDIO: ON' : 'AUDIO: OFF'}
-            </span>
-          </button>
 
           {/* Mobile Menu */}
           <button

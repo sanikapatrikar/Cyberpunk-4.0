@@ -280,7 +280,7 @@ const CinematicSequence = ({ onSequenceComplete }) => {
         className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-4 pointer-events-auto cursor-pointer select-none"
       >
         {/* Large Event Logo: CYBER | PUNK */}
-        <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 mb-3 sm:mb-4 relative">
+        <div className="flex items-center justify-center gap-1 sm:gap-2 md:gap-3 mb-3 sm:mb-4 relative">
           <span
             className="font-compacta text-[clamp(3.5rem,10vw,8.5rem)] tracking-wider uppercase leading-none font-bold drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]"
             style={
@@ -295,9 +295,9 @@ const CinematicSequence = ({ onSequenceComplete }) => {
           >
             CYBER
           </span>
-          <span className="font-compacta text-[clamp(3rem,8vw,7.5rem)] text-red-600 font-light leading-none">
-            |
-          </span>
+          
+          <div className="w-[4px] sm:w-[6px] md:w-[8px] h-[clamp(2.5rem,7.5vw,6.5rem)] bg-red-600 rounded-sm relative -top-[2px] sm:-top-[4px]" />
+
           <div className="bg-red-600 px-3 sm:px-6 md:px-8 py-0.5 sm:py-1 rounded-sm shadow-[0_0_35px_rgba(230,0,0,0.7)] border border-red-500 flex items-center justify-center">
             <span
               className="font-compacta text-[clamp(3.5rem,10vw,8.5rem)] tracking-wider uppercase leading-none font-bold"
