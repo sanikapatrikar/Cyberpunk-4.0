@@ -230,33 +230,64 @@ const CinematicSequence = ({ onSequenceComplete }) => {
       />
 
       {/* Scene 04 & 05: Industrial Vault Gate Doors */}
-      <div className="absolute inset-0 z-30 pointer-events-none flex overflow-hidden">
-        {/* Left Gate Door */}
-        <div
-          ref={gateLeftRef}
-          className="w-1/2 h-full bg-cover bg-left relative border-r-2 border-red-600/50 shadow-2xl opacity-0"
-          style={{ backgroundImage: "url('/assets/heist_vault_gate.jpg')" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-red-950/40" />
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-3">
-            <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" />
-            <span className="w-2 h-16 bg-red-600/80 rounded" />
-          </div>
-        </div>
+<div className="absolute inset-0 z-30 pointer-events-none flex overflow-hidden">
 
-        {/* Right Gate Door */}
-        <div
-          ref={gateRightRef}
-          className="w-1/2 h-full bg-cover bg-right relative border-l-2 border-red-600/50 shadow-2xl opacity-0"
-          style={{ backgroundImage: "url('/assets/heist_vault_gate.jpg')" }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-transparent to-red-950/40" />
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col gap-3">
-            <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" />
-            <span className="w-2 h-16 bg-red-600/80 rounded" />
-          </div>
-        </div>
-      </div>
+  {/* LEFT VAULT DOOR */}
+  <div
+    ref={gateLeftRef}
+    className="
+      relative w-1/2 h-full overflow-hidden
+      border-r-2 border-red-600/50
+      shadow-2xl opacity-0
+    "
+    style={{
+      backgroundImage: "url('/assets/heist_vault_gate.jpg')",
+      backgroundSize: "200% 100%",
+      backgroundPosition: "left center",
+      backgroundRepeat: "no-repeat",
+    }}
+  >
+    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-red-950/40" />
+
+    <div className="
+      absolute right-3 sm:right-4
+      top-1/2 -translate-y-1/2
+      flex flex-col gap-3
+    ">
+      <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" />
+      <span className="w-2 h-16 bg-red-600/80 rounded" />
+    </div>
+  </div>
+
+
+  {/* RIGHT VAULT DOOR */}
+  <div
+    ref={gateRightRef}
+    className="
+      relative w-1/2 h-full overflow-hidden
+      border-l-2 border-red-600/50
+      shadow-2xl opacity-0
+    "
+    style={{
+      backgroundImage: "url('/assets/heist_vault_gate.jpg')",
+      backgroundSize: "200% 100%",
+      backgroundPosition: "right center",
+      backgroundRepeat: "no-repeat",
+    }}
+  >
+    <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-transparent to-red-950/40" />
+
+    <div className="
+      absolute left-3 sm:left-4
+      top-1/2 -translate-y-1/2
+      flex flex-col gap-3
+    ">
+      <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" />
+      <span className="w-2 h-16 bg-red-600/80 rounded" />
+    </div>
+  </div>
+
+</div>
 
       {/* Scene 06: Heist Crew Reveal Layer */}
       <div
