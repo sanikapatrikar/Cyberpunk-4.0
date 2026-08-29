@@ -212,15 +212,22 @@ const toggleMemberActive = (name) => {
 
 
 
-  const prevCard = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? crewMembers.length - 1 : prevIndex - 1));
-  };
+ const prevCard = () => {
+  setActiveMember(null);
+  setCurrentIndex((prevIndex) =>
+    prevIndex === 0 ? crewMembers.length - 1 : prevIndex - 1
+  );
+};
 
-  const nextCard = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === crewMembers.length - 1 ? 0 : prevIndex + 1));
-  };
+const nextCard = () => {
+  setActiveMember(null);
+  setCurrentIndex((prevIndex) =>
+    prevIndex === crewMembers.length - 1 ? 0 : prevIndex + 1
+  );
+};
 
   const member = crewMembers[currentIndex];
+  const isActive = activeMember === member.name;
 
   return (
     <section id="crew-section" className="relative py-24 bg-[#050505] text-white border-t border-zinc-900">
@@ -255,19 +262,27 @@ const toggleMemberActive = (name) => {
   }`}
 >
             
-            {/* Image / Avatar Container */}
-            <div className="relative h-72 w-full bg-zinc-900 overflow-hidden">
-              <img
-                src={member.image}
-                alt={member.name}
-                className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 filter contrast-125 grayscale group-hover:grayscale-0"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
-              <span className="absolute top-3 right-3 bg-red-950/80 border border-red-600/60 text-red-400 font-mono-cyber text-[10px] px-2.5 py-1 rounded-md tracking-widest flex items-center gap-1">
-                <ShieldCheck size={12} />
-                VERIFIED CREW
-              </span>
-            </div>
+          {/* Image / Avatar Container */}
+<div className="relative h-72 w-full bg-zinc-900 overflow-hidden">
+
+  <img
+    src={member.image}
+    alt={member.name}
+    className={`w-full h-full object-cover object-center transition-all duration-500 filter contrast-125 ${
+      activeMember === member.name
+        ? "scale-105 grayscale-0"
+        : "grayscale group-hover:grayscale-0 group-hover:scale-105"
+    }`}
+  />
+
+  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
+
+  <span className="absolute top-3 right-3 bg-red-950/80 border border-red-600/60 text-red-400 font-mono-cyber text-[10px] px-2.5 py-1 rounded-md tracking-widest flex items-center gap-1">
+    <ShieldCheck size={12} />
+    VERIFIED CREW
+  </span>
+
+</div>
 
             {/* Info Container */}
             <div className="p-6">
