@@ -295,8 +295,9 @@ const nextCard = () => {
       ? 'text-red-500'
       : 'text-white group-hover:text-red-500'
   }`}
+
 >
-   
+   {member.name}
 </h3>
               <p className="text-gray-400 text-sm line-clamp-3 mb-6 min-h-[60px] text-center">
                 {member.bio}
