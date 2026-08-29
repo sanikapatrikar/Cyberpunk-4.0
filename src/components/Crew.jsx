@@ -144,6 +144,15 @@ const coreCrewMembers = [
       instagram: 'https://www.instagram.com/_lokeshni.burde_',
     },
   },
+  {
+    name: 'Vidhi Ayalwar',
+    role: 'Documentation Head',
+    image: '/core_team_images/Vidhi Ayalwar (Documentation Head).jpeg',
+    socials: {
+      linkedin: 'https://www.linkedin.com/in/vidhi-ayalwar-491470330',
+      instagram: 'https://www.instagram.com/vidhi_2803',
+    },
+  },
 
   {
     name: 'Ayush Malvi',
@@ -185,15 +194,7 @@ const coreCrewMembers = [
     },
   },
 
-  {
-    name: 'Vidhi Ayalwar',
-    role: 'Documentation Head',
-    image: '/core_team_images/Vidhi Ayalwar (Documentation Head).jpeg',
-    socials: {
-      linkedin: 'https://www.linkedin.com/in/vidhi-ayalwar-491470330',
-      instagram: 'https://www.instagram.com/vidhi_2803',
-    },
-  },
+  
 ];
 
 
@@ -245,7 +246,14 @@ const toggleMemberActive = (name) => {
             <ChevronLeft size={32} />
           </button>
 
-          <div className="w-full max-w-sm group relative bg-zinc-950 border border-zinc-800 hover:border-red-600 rounded-2xl overflow-hidden transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.8)] hover:shadow-[0_0_30px_rgba(230,0,0,0.3)] flex flex-col justify-between">
+          <div
+  onClick={() => toggleMemberActive(member.name)}
+  className={`w-full max-w-sm group relative bg-zinc-950 border rounded-2xl overflow-hidden transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.8)] flex flex-col justify-between cursor-pointer ${
+    activeMember === member.name
+      ? 'border-red-600 shadow-[0_0_30px_rgba(230,0,0,0.3)] -translate-y-2'
+      : 'border-zinc-800 hover:border-red-600 hover:shadow-[0_0_30px_rgba(230,0,0,0.3)]'
+  }`}
+>
             
             {/* Image / Avatar Container */}
             <div className="relative h-72 w-full bg-zinc-900 overflow-hidden">
@@ -266,9 +274,15 @@ const toggleMemberActive = (name) => {
               <p className="font-mono-cyber text-xs text-red-500 font-bold mb-1 text-center">
                 {member.codename}
               </p>
-              <h3 className="font-bebas text-3xl tracking-wider text-white group-hover:text-red-500 transition-colors mb-1 text-center">
-                {member.name}
-              </h3>
+             <h3
+  className={`font-bebas text-3xl tracking-wider transition-colors mb-1 text-center ${
+    activeMember === member.name
+      ? 'text-red-500'
+      : 'text-white group-hover:text-red-500'
+  }`}
+>
+   
+</h3>
               <p className="text-gray-400 text-sm line-clamp-3 mb-6 min-h-[60px] text-center">
                 {member.bio}
               </p>
