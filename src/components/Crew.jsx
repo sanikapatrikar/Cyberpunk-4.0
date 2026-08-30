@@ -55,6 +55,19 @@ const crewMembers = [
       instagram: 'https://www.instagram.com/thenooshyyyt?igsi=d3BjN2M5a21rbGx2' 
     },
   },
+  {
+    name: 'TEJAS DONGRE',
+    role: 'Mentor',
+    
+    image: '/assets/tejas.jpg',
+
+    socials: { linkedin: '#', insta: '#',  },
+
+    socials: { 
+      linkedin: 'https://www.linkedin.com/in/tejas-dongre-0830b5322?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
+      instagram: 'https://www.instagram.com/tejas_dongre_09?igsi=MTY4cHJ6NTFkbms4bg==' 
+    },
+  },
   
 ];
 
