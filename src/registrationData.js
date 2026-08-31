@@ -1,6 +1,4 @@
-// EDIT THIS FILE when your event names, allowed team sizes, prices, or WhatsApp groups change.
-
-export const EVENT_DATABASE = {
+﻿export const EVENT_DATABASE = {
   HEIST: {
     name: "Hacker's Heist",
     iconKey: "HEIST",
