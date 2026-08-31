@@ -1,1227 +1,550 @@
-  import React, { useMemo, useState } from "react";
-  import "./Registration.css";
+﻿import React, { useEffect, useMemo, useState } from "react";
+import { Terminal, Fingerprint, Cpu, Zap, ArrowRight, ArrowLeft, Send, CheckCircle2 } from "lucide-react";
+import "./Registration.css";
+import { playHeistClickSound } from "./utils/audio";
+import {
+  EVENT_DATABASE,
+  TEAM_SIZE_DATABASE,
+  BRANCH_OPTIONS,
+  YEAR_OPTIONS,
+  getTeamSizeConfig,
+  getEventConfig,
+  getEventPrice,
+  getEventWhatsAppLink,
+  getPaymentUpi,
+} from "./registrationData";
+import { GOOGLE_SCRIPT_URL } from "./googleScriptConfig";
 
-  import {
-    EVENT_DATABASE,
-    TEAM_SIZE_DATABASE,
-    BRANCH_OPTIONS,
-    YEAR_OPTIONS,
-    getTeamSizeConfig,
-  } from "./registrationData";
+const EVENT_ICONS = {
+  HEIST: Terminal,
+  DETECTYX: Fingerprint,
+  WEB3: Cpu,
+  NGV: Zap,
+};
 
-  import { GOOGLE_SCRIPT_URL } from "./googleScriptConfig";
+const PROGRESS_STEPS = [
+  { step: 1, label: "EVENT" },
+  { step: 2, label: "TEAM" },
+  { step: 3, label: "DETAILS" },
+  { step: 4, label: "PAYMENT" },
+];
 
-  const createParticipant = () => ({
-    fullName: "",
-    email: "",
-    phone: "",
-    college: "",
-    branch: "",
-    year: "",
-  });
+const createParticipant = () => ({
+  fullName: "",
+  email: "",
+  phone: "",
+  college: "",
+  branch: "",
+  year: "",
+});
 
-  const createEmptyForm = () => ({
-    teamName: "",
-    participants: [],
-    transactionId: "",
-    paymentScreenshot: null,
-  });
+const createEmptyForm = () => ({
+  teamName: "",
+  participants: [],
+  transactionId: "",
+  paymentScreenshot: null,
+});
 
-  function Registration() {
-    const [step, setStep] = useState(1);
-    const [selectedEvent, setSelectedEvent] = useState("");
-    const [selectedTeamSize, setSelectedTeamSize] = useState("");
-    const [form, setForm] = useState(createEmptyForm());
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState("");
+function Registration() {
+  const getInitialEvent = () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const evt = params.get("event");
+      return evt && EVENT_DATABASE[evt] ? evt : "";
+    } catch (error) {
+      return "";
+    }
+  };
 
-    const teamConfig = useMemo(
-      () => getTeamSizeConfig(selectedTeamSize),
-      [selectedTeamSize]
-    );
+  const [step, setStep] = useState(1);
+  const [selectedEvent, setSelectedEvent] = useState(getInitialEvent);
+  const [selectedTeamSize, setSelectedTeamSize] = useState("");
+  const [form, setForm] = useState(createEmptyForm());
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const amount = teamConfig?.amount ?? 0;
-    const participantCount = teamConfig?.count ?? 0;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const evt = params.get("event");
+    if (evt && EVENT_DATABASE[evt]) {
+      setSelectedEvent(evt);
+    }
+  }, []);
 
-    /* --------------------------------
-      FORM HELPERS
-    -------------------------------- */
+  const teamConfig = useMemo(() => getTeamSizeConfig(selectedTeamSize), [selectedTeamSize]);
+  const eventConfig = useMemo(() => getEventConfig(selectedEvent), [selectedEvent]);
+  const amount = useMemo(() => getEventPrice(selectedEvent), [selectedEvent]);
+  const participantCount = teamConfig?.count ?? 0;
 
-    const updateForm = (key, value) => {
-      setForm((prev) => ({
-        ...prev,
+  const updateForm = (key, value) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const updateParticipant = (index, key, value) => {
+    setForm((prev) => {
+      const participants = [...(prev.participants || [])];
+      participants[index] = {
+        ...(participants[index] || createParticipant()),
         [key]: value,
-      }));
-    };
+      };
+      return { ...prev, participants };
+    });
+  };
 
-    const updateParticipant = (index, key, value) => {
-      setForm((prev) => {
-        const participants = [...prev.participants];
+  const chooseEvent = (key) => {
+    playHeistClickSound();
+    setSelectedEvent(key);
+    setError("");
+  };
 
-        participants[index] = {
-          ...participants[index],
-          [key]: value,
-        };
+  const chooseTeamSize = (key) => {
+    playHeistClickSound();
+    setSelectedTeamSize(key);
+    setError("");
 
-        return {
-          ...prev,
-          participants,
-        };
-      });
-    };
+    const config = getTeamSizeConfig(key);
+    if (!config) return;
 
-    /* --------------------------------
-      EVENT SELECTION
-    -------------------------------- */
+    setForm((prev) => {
+      const existing = [...(prev.participants || [])];
+      const nextParticipants = Array.from({ length: config.count }, (_, index) => existing[index] || createParticipant());
+      return { ...prev, participants: nextParticipants };
+    });
+  };
 
-    const chooseEvent = (key) => {
-      setSelectedEvent(key);
-      setError("");
-    };
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || "").trim());
 
-    /* --------------------------------
-      TEAM SIZE
-    -------------------------------- */
+  const validatePhone = (phone) => {
+    const cleaned = (phone || "").replace(/\D/g, "");
+    return cleaned.length >= 10 && cleaned.length <= 15;
+  };
 
-    const chooseTeamSize = (key) => {
-      const config = getTeamSizeConfig(key);
+  const validateParticipants = () => {
+    if (!selectedTeamSize) return "Select a crew size to continue.";
 
-      if (!config) {
-        setError("Invalid team configuration.");
+    for (let i = 0; i < participantCount; i += 1) {
+      const participant = form.participants[i] || createParticipant();
+
+      if (!participant.fullName?.trim()) return `Enter the full name of operative ${i + 1}.`;
+      if (!validateEmail(participant.email)) return `Enter a valid email for operative ${i + 1}.`;
+      if (!validatePhone(participant.phone)) return `Enter a valid phone number for operative ${i + 1}.`;
+      if (!participant.college?.trim()) return `Enter the college of operative ${i + 1}.`;
+      if (!participant.branch) return `Select the branch of operative ${i + 1}.`;
+      if (!participant.year) return `Select the year of operative ${i + 1}.`;
+    }
+
+    return "";
+  };
+
+  const next = () => {
+    setError("");
+
+    if (step === 1 && !selectedEvent) {
+      setError("Select an event dossier to continue.");
+      return;
+    }
+
+    if (step === 2 && !selectedTeamSize) {
+      setError("Select a crew size to continue.");
+      return;
+    }
+
+    if (step === 3) {
+      const participantError = validateParticipants();
+      if (participantError) {
+        setError(participantError);
+        return;
+      }
+    }
+
+    if (step === 4) {
+      if (!form.transactionId.trim()) {
+        setError("Enter the transaction ID / UTR.");
+        return;
+      }
+      if (!form.paymentScreenshot) {
+        setError("Upload the payment screenshot.");
+        return;
+      }
+    }
+
+    setStep((current) => Math.min(4, current + 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const back = () => {
+    setError("");
+    setStep((current) => Math.max(1, current - 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      if (!file) {
+        reject(new Error("Payment screenshot is missing."));
         return;
       }
 
-      setSelectedTeamSize(key);
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result).includes(",") ? String(reader.result).split(",")[1] : String(reader.result));
+      reader.onerror = () => reject(new Error("Unable to read payment screenshot."));
+      reader.readAsDataURL(file);
+    });
 
-      setForm((prev) => ({
-        ...prev,
-        participants: Array.from(
-          { length: config.count },
-          (_, index) =>
-            prev.participants[index] || createParticipant()
-        ),
+  const submitRegistration = async () => {
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const summary = form.participants.slice(0, participantCount).map((member) => ({
+        fullName: member.fullName.trim(),
+        email: member.email.trim(),
+        phone: member.phone.trim(),
+        college: member.college.trim(),
+        branch: member.branch,
+        year: member.year,
       }));
 
-      setError("");
-    };
+      const payload = {
+        eventKey: selectedEvent,
+        eventName: EVENT_DATABASE[selectedEvent]?.name || "",
+        teamName: form.teamName.trim(),
+        teamSizeKey: selectedTeamSize,
+        teamSize: teamConfig?.label || "",
+        participantCount,
+        totalAmount: amount,
+        participants: summary,
+        transactionId: form.transactionId.trim(),
+        timestamp: new Date().toISOString(),
+      };
 
-    /* --------------------------------
-      VALIDATION
-    -------------------------------- */
-
-    const validateEmail = (email) => {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-    };
-
-    const validatePhone = (phone) => {
-      const cleaned = phone.replace(/\D/g, "");
-      return cleaned.length >= 10 && cleaned.length <= 15;
-    };
-
-    const validateParticipants = () => {
-      for (let i = 0; i < form.participants.length; i++) {
-        const participant = form.participants[i];
-
-        if (!participant.fullName.trim()) {
-          return `Enter the full name of operative ${i + 1}.`;
-        }
-
-        if (!validateEmail(participant.email)) {
-          return `Enter a valid email for operative ${i + 1}.`;
-        }
-
-        if (!validatePhone(participant.phone)) {
-          return `Enter a valid phone number for operative ${i + 1}.`;
-        }
-
-        if (!participant.college.trim()) {
-          return `Enter the college of operative ${i + 1}.`;
-        }
-
-        if (!participant.branch) {
-          return `Select the branch of operative ${i + 1}.`;
-        }
-
-        if (!participant.year) {
-          return `Select the year of operative ${i + 1}.`;
-        }
+      if (form.paymentScreenshot) {
+        payload.screenshotBase64 = await toBase64(form.paymentScreenshot);
+        payload.screenshotFileName = form.paymentScreenshot.name;
+        payload.screenshotMimeType = form.paymentScreenshot.type;
       }
 
-      return "";
-    };
-
-    /* --------------------------------
-      NEXT STEP
-    -------------------------------- */
-
-    const next = () => {
-      setError("");
-
-      if (step === 1) {
-        if (!selectedEvent) {
-          setError("Select an event dossier to continue.");
-          return;
-        }
-      }
-
-      if (step === 2) {
-        if (!selectedTeamSize) {
-          setError("Select a team configuration to continue.");
-          return;
-        }
-
-        if (!teamConfig) {
-          setError("Invalid team configuration.");
-          return;
-        }
-      }
-
-      if (step === 3) {
-        const participantError = validateParticipants();
-
-        if (participantError) {
-          setError(participantError);
-          return;
-        }
-      }
-
-      if (step === 4) {
-        if (!form.transactionId.trim()) {
-          setError("Enter the transaction ID / UTR.");
-          return;
-        }
-
-        if (!form.paymentScreenshot) {
-          setError("Upload the payment screenshot.");
-          return;
-        }
-      }
-
-      setStep((currentStep) => Math.min(5, currentStep + 1));
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    };
-
-    /* --------------------------------
-      BACK
-    -------------------------------- */
-
-    const back = () => {
-      setError("");
-
-      setStep((currentStep) =>
-        Math.max(1, currentStep - 1)
-      );
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    };
-
-    /* --------------------------------
-      FILE → BASE64
-    -------------------------------- */
-
-    const toBase64 = (file) =>
-      new Promise((resolve, reject) => {
-        if (!file) {
-          reject(new Error("Payment screenshot is missing."));
-          return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          const result = String(reader.result);
-
-          const base64 = result.includes(",")
-            ? result.split(",")[1]
-            : result;
-
-          resolve(base64);
-        };
-
-        reader.onerror = () => {
-          reject(
-            new Error("Unable to read payment screenshot.")
-          );
-        };
-
-        reader.readAsDataURL(file);
-      });
-
-    /* --------------------------------
-      SUBMIT REGISTRATION
-    -------------------------------- */
-
-    const submitRegistration = async () => {
-      setSubmitting(true);
-      setError("");
-
-      try {
-        /* Check Google Apps Script URL */
-
-        if (
-          !GOOGLE_SCRIPT_URL ||
-          GOOGLE_SCRIPT_URL.includes("PASTE_YOUR")
-        ) {
-          throw new Error(
-            "Google Sheet is not connected. Add your deployed Google Apps Script URL in googleScriptConfig.js."
-          );
-        }
-
-        /* Final validation */
-
-        if (!selectedEvent) {
-          throw new Error("Event information is missing.");
-        }
-
-        if (!teamConfig) {
-          throw new Error("Team configuration is missing.");
-        }
-
-        if (!form.transactionId.trim()) {
-          throw new Error("Transaction ID / UTR is required.");
-        }
-
-        if (!form.paymentScreenshot) {
-          throw new Error(
-            "Payment screenshot is required."
-          );
-        }
-
-        const participantError =
-          validateParticipants();
-
-        if (participantError) {
-          throw new Error(participantError);
-        }
-
-        /* Convert screenshot */
-
-        const screenshotBase64 =
-          await toBase64(form.paymentScreenshot);
-
-        /* --------------------------------
-          CLEAN PARTICIPANT DATA
-
-          Only real form values are sent.
-          No random reference number.
-          No roll number.
-        -------------------------------- */
-
-        const cleanParticipants =
-          form.participants.map((participant) => ({
-            fullName: participant.fullName.trim(),
-            email: participant.email.trim(),
-            phone: participant.phone
-              .replace(/\s+/g, "")
-              .trim(),
-            college: participant.college.trim(),
-            branch: participant.branch.trim(),
-            year: participant.year.trim(),
-          }));
-
-        /* --------------------------------
-          GOOGLE SHEETS PAYLOAD
-        -------------------------------- */
-
-        const payload = {
-          eventKey: selectedEvent,
-
-          eventName:
-            EVENT_DATABASE[selectedEvent]?.name || "",
-
-          teamSizeKey: selectedTeamSize,
-
-          teamSize:
-            teamConfig.label || "",
-
-          participantCount,
-
-          totalAmount: amount,
-
-          teamName: form.teamName.trim(),
-
-          participants: cleanParticipants,
-
-          transactionId:
-            form.transactionId.trim(),
-
-          screenshotBase64,
-
-          screenshotFileName:
-            form.paymentScreenshot.name,
-
-          screenshotMimeType:
-            form.paymentScreenshot.type,
-
-          timestamp:
-            new Date().toISOString(),
-        };
-
-        console.log(
-          "Sending registration:",
-          payload
-        );
-
-        /* --------------------------------
-          SEND TO GOOGLE APPS SCRIPT
-        -------------------------------- */
-
-       const response = await fetch(GOOGLE_SCRIPT_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "text/plain;charset=utf-8",
-  },
-  body: JSON.stringify(payload),
-});
-
-const result = await response.json();
-
-if (!result.success) {
-  setError(
-    result.error || "Registration failed. Please check the transation ID."
-  );
-  return;
-}
-
-        /* --------------------------------
-          SUCCESS
-        -------------------------------- */
-
-        setStep(6);
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
+      if (GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.includes("PASTE_YOUR")) {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          mode: "no-cors",
+          body: JSON.stringify(payload),
         });
-      } catch (err) {
-        console.error(
-          "Registration error:",
-          err
-        );
-
-        setError(
-          err?.message ||
-            "Registration failed. Please try again."
-        );
-      } finally {
-        setSubmitting(false);
       }
-    };
 
-    /* --------------------------------
-      RESET
-    -------------------------------- */
+      setIsSubmitted(true);
+    } catch (err) {
+      setError(err?.message || "Registration failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
-    const reset = () => {
-      setStep(1);
-      setSelectedEvent("");
-      setSelectedTeamSize("");
-      setForm(createEmptyForm());
-      setError("");
+  const reset = () => {
+    playHeistClickSound();
+    setStep(1);
+    setSelectedEvent(getInitialEvent());
+    setSelectedTeamSize("");
+    setForm(createEmptyForm());
+    setError("");
+    setIsSubmitted(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    };
+  const selectedEventInfo = eventConfig || EVENT_DATABASE.HEIST;
 
-    /* --------------------------------
-      UI
-    -------------------------------- */
+  return (
+    <div className="cp-registration">
+      <header className="cp-reg-header">
+        <div>
+          <div className="cp-operation">OPERATION // CYBERPUNK 2026</div>
+          <h1>
+            CYBERPUNK <span>REGISTRATION</span>
+          </h1>
+        </div>
+        <div className="cp-system">
+          <i /> SYSTEM ONLINE
+        </div>
+      </header>
 
-    return (
-      <div className="cp-registration">
-        <div className="cp-noise" />
-
-        <div className="cp-red-glow cp-glow-one" />
-
-        <div className="cp-red-glow cp-glow-two" />
-
-        {/* HEADER */}
-
-        <header className="cp-reg-header">
-          <div>
-            <div className="cp-operation">
-              OPERATION // CYBERPUNK 2026
-            </div>
-
-            <h1>
-              CYBERPUNK{" "}
-              <span>REGISTRATION</span>
-            </h1>
+      <div className="cp-progress">
+        {PROGRESS_STEPS.map((item) => (
+          <div key={item.label} className={`cp-progress-item ${step >= item.step ? "active" : ""}`}>
+            <b>{String(item.step).padStart(2, "0")}</b>
+            <span>{item.label}</span>
           </div>
+        ))}
+      </div>
 
-          <div className="cp-system">
-            <i /> SYSTEM ONLINE
-          </div>
-        </header>
-
-        {/* PROGRESS */}
-
-        <div className="cp-progress">
-          {[
-            "ENTRY",
-            "EVENT",
-            "TEAM",
-            "DOSSIER",
-            "PAYMENT",
-            "CLEAR",
-          ].map((label, index) => {
-            const number = index + 1;
-
-            return (
-              <div
-                key={label}
-                className={`cp-progress-item ${
-                  step >= number ? "active" : ""
-                }`}
-              >
-                <b>
-                  {String(number).padStart(2, "0")}
-                </b>
-
-                <span>{label}</span>
-              </div>
-            );
-          })}
+      <main className="cp-terminal">
+        <div className="cp-terminal-top">
+          <span>◆ TERMINAL // ACCESS_LEVEL_04</span>
+          <strong>SECRET // EYES ONLY</strong>
         </div>
 
-        {/* TERMINAL */}
+        {error && <div className="cp-error">⚠ {error}</div>}
 
-        <main className="cp-terminal">
-          <div className="cp-terminal-top">
-            <span>
-              ◆ TERMINAL // ACCESS_LEVEL_01
-            </span>
-
-            <strong>
-              SECRET // EYES ONLY
-            </strong>
-          </div>
-
-          {/* ERROR */}
-
-          {error && (
-            <div className="cp-error">
-              ⚠ {error}
+        {isSubmitted ? (
+          <section className="cp-screen cp-entry">
+            <div className="cp-stamp">CLEARANCE GRANTED</div>
+            <h2>
+              REGISTRATION<br />
+              <span>SUCCESS</span>
+            </h2>
+            <p className="cp-date">Your team has been recorded for {selectedEventInfo.name}.</p>
+            <div className="cp-panel" style={{ marginTop: "24px" }}>
+              <div className="cp-panel-row">
+                <span>Event</span>
+                <strong>{selectedEventInfo.name}</strong>
+              </div>
+              <div className="cp-panel-row">
+                <span>Team</span>
+                <strong>{teamConfig?.label || ""}</strong>
+              </div>
+              <div className="cp-panel-row">
+                <span>Amount</span>
+                <strong>₹{amount}</strong>
+              </div>
             </div>
-          )}
+            <button className="cp-btn cp-btn-primary" onClick={reset} style={{ marginTop: "24px" }}>
+              REGISTER ANOTHER TEAM <ArrowRight size={18} />
+            </button>
+          </section>
+        ) : (
+          <>
+            {step === 1 && (
+              <section className="cp-screen cp-entry">
+                <div className="cp-stamp">SECURITY CLEARANCE REQUIRED</div>
+                <h2>
+                  CYBERPUNK
+                  <br />
+                  <span>REGISTRATION</span>
+                </h2>
+                <p className="cp-date">/// 10 SEPTEMBER 2026 ///</p>
 
-          {/* =====================================
-              STEP 1
-          ===================================== */}
+                <div className="cp-event-grid">
+                  {Object.entries(EVENT_DATABASE).map(([key, event]) => {
+                    const Icon = EVENT_ICONS[key] || Terminal;
+                    const isSelected = selectedEvent === key;
 
-          {step === 1 && (
-            <section className="cp-screen cp-entry">
-              <div className="cp-stamp">
-                SECURITY CLEARANCE REQUIRED
-              </div>
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        className={`cp-event-card ${isSelected ? "active" : ""}`}
+                        onClick={() => chooseEvent(key)}
+                      >
+                        <div className="cp-event-topline">
+                          <span>{event.name}</span>
+                          <Icon size={18} />
+                        </div>
+                        <p>{event.shortDescription}</p>
+                        <div className="cp-event-foot">
+                          <strong>₹{event.price}</strong>
+                          <small>{teamConfig?.label || "Team"}</small>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
 
-              <h2>
-                CYBERPUNK
-                <br />
-                <span>REGISTRATION</span>
-              </h2>
-
-              <p className="cp-date">
-                /// 10 SEPTEMBER 2026 ///
-              </p>
-
-              <blockquote>
-                "Enter the operation. Assemble your
-                crew, clear payment credentials, and
-                secure your place in the grid."
-              </blockquote>
-
-              <div className="cp-event-grid">
-                {Object.entries(
-                  EVENT_DATABASE
-                ).map(([key, event]) => (
-                  <button
-                    type="button"
-                    key={key}
-                    onClick={() =>
-                      chooseEvent(key)
-                    }
-                    className={`cp-event-card ${
-                      selectedEvent === key
-                        ? "selected"
-                        : ""
-                    }`}
-                  >
-                    <span className="cp-event-icon">
-                      {event.icon}
-                    </span>
-
-                    <span>
-                      {event.name}
-                    </span>
-
-                    <small>
-                      {event.shortDescription}
-                    </small>
+                <div className="cp-actions">
+                  <button type="button" className="cp-btn cp-btn-primary" onClick={next} disabled={!selectedEvent}>
+                    NEXT <ArrowRight size={18} />
                   </button>
-                ))}
-              </div>
+                </div>
+              </section>
+            )}
 
-              <button
-                className="cp-primary"
-                onClick={next}
-              >
-                SELECT EVENT DOSSIER →
-              </button>
-            </section>
-          )}
+            {step === 2 && (
+              <section className="cp-screen cp-entry">
+                <div className="cp-stamp">TEAM CONFIGURATION</div>
+                <h2>
+                  SELECT<br />
+                  <span>Crew Size</span>
+                </h2>
 
-          {/* =====================================
-              STEP 2
-          ===================================== */}
-
-          {step === 2 && (
-            <section className="cp-screen">
-              <div className="cp-section-kicker">
-                STEP 02 // CREW CONFIGURATION
-              </div>
-
-              <h2>
-                CHOOSE YOUR{" "}
-                <span>CREW SIZE</span>
-              </h2>
-
-              <p className="cp-muted">
-                Select the number of operatives
-                entering the operation.
-              </p>
-
-              <div className="cp-team-grid">
-                {Object.entries(
-                  TEAM_SIZE_DATABASE
-                ).map(([key, item]) => (
-                  <button
-                    type="button"
-                    key={key}
-                    onClick={() =>
-                      chooseTeamSize(key)
-                    }
-                    className={`cp-team-card ${
-                      selectedTeamSize === key
-                        ? "selected"
-                        : ""
-                    }`}
-                  >
-                    <b>{item.label}</b>
-
-                    <span>
-                      {item.count} operative
-                      {item.count > 1
-                        ? "s"
-                        : ""}
-                    </span>
-
-                    <strong>
-                      ₹{item.amount}
-                    </strong>
-                  </button>
-                ))}
-              </div>
-
-              <div className="cp-actions">
-                <button
-                  className="cp-secondary"
-                  onClick={back}
-                >
-                  ← BACK
-                </button>
-
-                <button
-                  className="cp-primary"
-                  onClick={next}
-                >
-                  NEXT →
-                </button>
-              </div>
-            </section>
-          )}
-
-          {/* =====================================
-              STEP 3
-          ===================================== */}
-
-          {step === 3 && (
-            <section className="cp-screen">
-              <div className="cp-section-kicker">
-                STEP 03 // OPERATIVE DOSSIER
-              </div>
-
-              <h2>
-                ENTER{" "}
-                <span>
-                  PARTICIPANT DETAILS
-                </span>
-              </h2>
-
-              {/* TEAM NAME */}
-
-              <label className="cp-field">
-                <span>
-                  TEAM / CREW CODENAME
-                </span>
-
-                <input
-                  type="text"
-                  value={form.teamName}
-                  onChange={(e) =>
-                    updateForm(
-                      "teamName",
-                      e.target.value
-                    )
-                  }
-                  placeholder="Crew name"
-                  maxLength={50}
-                />
-              </label>
-
-              {/* PARTICIPANTS */}
-
-              <div className="cp-participants">
-                {form.participants.map(
-                  (participant, index) => (
-                    <div
-                      className="cp-participant"
-                      key={index}
+                <div className="cp-team-grid">
+                  {Object.entries(TEAM_SIZE_DATABASE).map(([key, config]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      className={`cp-team-card ${selectedTeamSize === key ? "active" : ""}`}
+                      onClick={() => chooseTeamSize(key)}
                     >
-                      <div className="cp-participant-title">
-                        <b>
-                          OPERATIVE{" "}
-                          {String(
-                            index + 1
-                          ).padStart(2, "0")}
-                        </b>
+                      <strong>{config.label}</strong>
+                      <span>{config.description}</span>
+                    </button>
+                  ))}
+                </div>
 
-                        <span>
-                          {index === 0
-                            ? "TEAM LEADER"
-                            : "CREW MEMBER"}
-                        </span>
-                      </div>
+                <div className="cp-form-group" style={{ marginTop: "24px" }}>
+                  <label>Team Name</label>
+                  <input
+                    value={form.teamName}
+                    onChange={(event) => updateForm("teamName", event.target.value)}
+                    placeholder="e.g. Red Team 7"
+                  />
+                </div>
 
-                      <div className="cp-form-grid">
-                        <Field
-                          label="FULL NAME"
-                          value={
-                            participant.fullName
-                          }
-                          onChange={(value) =>
-                            updateParticipant(
-                              index,
-                              "fullName",
-                              value
-                            )
-                          }
+                <div className="cp-actions split">
+                  <button type="button" className="cp-btn" onClick={back}>
+                    <ArrowLeft size={18} /> BACK
+                  </button>
+                  <button type="button" className="cp-btn cp-btn-primary" onClick={next} disabled={!selectedTeamSize}>
+                    NEXT <ArrowRight size={18} />
+                  </button>
+                </div>
+              </section>
+            )}
+
+            {step === 3 && (
+              <section className="cp-screen cp-entry">
+                <div className="cp-stamp">OPERATIVE MATRIX</div>
+                <h2>
+                  REGISTER<br />
+                  <span>Participants</span>
+                </h2>
+
+                {Array.from({ length: participantCount }, (_, index) => (
+                  <div key={index} className="cp-participant-card" style={{ marginBottom: "18px" }}>
+                    <div className="cp-card-title">Operative {index + 1}</div>
+                    <div className="cp-input-grid">
+                      <div className="cp-form-group">
+                        <label>Full Name</label>
+                        <input
+                          value={form.participants[index]?.fullName || ""}
+                          onChange={(event) => updateParticipant(index, "fullName", event.target.value)}
+                          placeholder="Sergio Marquina"
                         />
-
-                        <Field
-                          label="EMAIL"
+                      </div>
+                      <div className="cp-form-group">
+                        <label>Email</label>
+                        <input
                           type="email"
-                          value={
-                            participant.email
-                          }
-                          onChange={(value) =>
-                            updateParticipant(
-                              index,
-                              "email",
-                              value
-                            )
-                          }
-                        />
-
-                        <Field
-                          label="PHONE"
-                          type="tel"
-                          value={
-                            participant.phone
-                          }
-                          onChange={(value) =>
-                            updateParticipant(
-                              index,
-                              "phone",
-                              value
-                            )
-                          }
-                        />
-
-                        <Field
-                          label="COLLEGE"
-                          value={
-                            participant.college
-                          }
-                          onChange={(value) =>
-                            updateParticipant(
-                              index,
-                              "college",
-                              value
-                            )
-                          }
-                        />
-
-                        <SelectField
-                          label="BRANCH"
-                          value={
-                            participant.branch
-                          }
-                          options={
-                            BRANCH_OPTIONS
-                          }
-                          onChange={(value) =>
-                            updateParticipant(
-                              index,
-                              "branch",
-                              value
-                            )
-                          }
-                        />
-
-                        <SelectField
-                          label="YEAR"
-                          value={
-                            participant.year
-                          }
-                          options={
-                            YEAR_OPTIONS
-                          }
-                          onChange={(value) =>
-                            updateParticipant(
-                              index,
-                              "year",
-                              value
-                            )
-                          }
+                          value={form.participants[index]?.email || ""}
+                          onChange={(event) => updateParticipant(index, "email", event.target.value)}
+                          placeholder="name@email.com"
                         />
                       </div>
+                      <div className="cp-form-group">
+                        <label>Phone</label>
+                        <input
+                          value={form.participants[index]?.phone || ""}
+                          onChange={(event) => updateParticipant(index, "phone", event.target.value)}
+                          placeholder="+91 98765 43210"
+                        />
+                      </div>
+                      <div className="cp-form-group">
+                        <label>College</label>
+                        <input
+                          value={form.participants[index]?.college || ""}
+                          onChange={(event) => updateParticipant(index, "college", event.target.value)}
+                          placeholder="College / University"
+                        />
+                      </div>
+                      <div className="cp-form-group">
+                        <label>Branch</label>
+                        <select
+                          value={form.participants[index]?.branch || ""}
+                          onChange={(event) => updateParticipant(index, "branch", event.target.value)}
+                        >
+                          <option value="">Select branch</option>
+                          {BRANCH_OPTIONS.map((branch) => (
+                            <option key={branch} value={branch}>{branch}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="cp-form-group">
+                        <label>Year</label>
+                        <select
+                          value={form.participants[index]?.year || ""}
+                          onChange={(event) => updateParticipant(index, "year", event.target.value)}
+                        >
+                          <option value="">Select year</option>
+                          {YEAR_OPTIONS.map((year) => (
+                            <option key={year} value={year}>{year}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                  )
-                )}
-              </div>
-
-              <div className="cp-actions">
-                <button
-                  className="cp-secondary"
-                  onClick={back}
-                >
-                  ← BACK
-                </button>
-
-                <button
-                  className="cp-primary"
-                  onClick={next}
-                >
-                  PROCEED TO PAYMENT →
-                </button>
-              </div>
-            </section>
-          )}
-
-          {/* =====================================
-              STEP 4
-          ===================================== */}
-
-          {step === 4 && (
-            <section className="cp-screen cp-payment">
-              <div className="cp-section-kicker">
-                STEP 04 // PAYMENT CLEARANCE
-              </div>
-
-              <h2>
-                CLEAR THE{" "}
-                <span>HEIST FUND</span>
-              </h2>
-
-              <div className="cp-payment-layout">
-                {/* PAYMENT DETAILS */}
-
-                <div>
-                  <div className="cp-payment-meta">
-                    <span>
-                      {
-                        EVENT_DATABASE[
-                          selectedEvent
-                        ]?.name
-                      }
-                    </span>
-
-                    <span>
-                      {teamConfig?.label}
-                    </span>
-
-                    <strong>
-                      ₹{amount}
-                    </strong>
                   </div>
+                ))}
 
-                  <div className="cp-qr-wrap">
-                    <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(
-                        teamConfig?.upi || ""
-                      )}`}
-                      alt="Payment QR"
-                    />
+                <div className="cp-actions split">
+                  <button type="button" className="cp-btn" onClick={back}>
+                    <ArrowLeft size={18} /> BACK
+                  </button>
+                  <button type="button" className="cp-btn cp-btn-primary" onClick={next}>
+                    NEXT <ArrowRight size={18} />
+                  </button>
+                </div>
+              </section>
+            )}
+
+            {step === 4 && (
+              <section className="cp-screen cp-entry">
+                <div className="cp-stamp">PAYMENT CLEARANCE</div>
+                <h2>
+                  FINALIZE<br />
+                  <span>Transaction</span>
+                </h2>
+
+                <div className="cp-panel" style={{ marginBottom: "20px" }}>
+                  <div className="cp-panel-row">
+                    <span>Event</span>
+                    <strong>{selectedEventInfo.name}</strong>
                   </div>
-
-                  <p className="cp-upi">
-                    
-                  </p>
-
-                  <p className="cp-muted">
-                    Scan with any UPI application.
-                  </p>
+                  <div className="cp-panel-row">
+                    <span>Team Size</span>
+                    <strong>{teamConfig?.label || ""}</strong>
+                  </div>
+                  <div className="cp-panel-row">
+                    <span>Amount</span>
+                    <strong>₹{amount}</strong>
+                  </div>
+                  <div className="cp-panel-row">
+                    <span>UPI</span>
+                    <strong>{getPaymentUpi(amount)}</strong>
+                  </div>
                 </div>
 
-                {/* PAYMENT FORM */}
-
-                <div className="cp-payment-form">
-                  <label className="cp-field">
-                    <span>
-                      TRANSACTION ID / UTR
-                    </span>
-
-                    <input
-    type="text"
-    value={form.transactionId}
-    onChange={(e) => {
-      const value = e.target.value
-        .replace(/[^A-Za-z0-9]/g, "")
-        .slice(0, 12);
-
-      setForm((prev) => ({
-        ...prev,
-        transactionId: value,
-      }));
-    }}
-    placeholder="Enter 12-character UTR / Transaction ID"
-    maxLength={12}
-    minLength={12}
-    required
-    pattern="[A-Za-z0-9]{12}"
-  />
-                  </label>
-
-                  <label className="cp-upload">
-                    <span>
-                      PAYMENT SCREENSHOT
-                    </span>
-
-                    <input
-                      type="file"
-                      accept="image/png,image/jpeg,image/jpg,image/webp,image/pdf"
-                      onChange={(e) => {
-                        const file =
-                          e.target.files?.[0] ||
-                          null;
-
-                        if (!file) {
-                          updateForm(
-                            "paymentScreenshot",
-                            null
-                          );
-                          return;
-                        }
-
-                        /* Maximum 5 MB */
-
-                        if (
-                          file.size >
-                          5 * 1024 * 1024
-                        ) {
-                          setError(
-                            "Payment screenshot must be smaller than 5 MB."
-                          );
-
-                          e.target.value = "";
-                          return;
-                        }
-
-                        setError("");
-
-                        updateForm(
-                          "paymentScreenshot",
-                          file
-                        );
-                      }}
-                    />
-                  </label>
-
-                  {form.paymentScreenshot && (
-                    <div className="cp-file-ok">
-                      ✓{" "}
-                      {
-                        form
-                          .paymentScreenshot
-                          .name
-                      }
-                    </div>
-                  )}
+                <div className="cp-form-group">
+                  <label>Transaction ID / UTR</label>
+                  <input
+                    value={form.transactionId}
+                    onChange={(event) => updateForm("transactionId", event.target.value)}
+                    placeholder="Tx ID / UTR"
+                  />
                 </div>
-              </div>
 
-              <div className="cp-actions">
-                <button
-                  className="cp-secondary"
-                  onClick={back}
-                >
-                  ← BACK
-                </button>
+                <div className="cp-form-group">
+                  <label>Payment Screenshot</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => updateForm("paymentScreenshot", event.target.files?.[0] || null)}
+                  />
+                  {form.paymentScreenshot && <small>Selected: {form.paymentScreenshot.name}</small>}
+                </div>
 
-                <button
-                  className="cp-primary"
-                  onClick={next}
-                >
-                  REVIEW DOSSIER →
-                </button>
-              </div>
-            </section>
-          )}
+                <div className="cp-actions split">
+                  <button type="button" className="cp-btn" onClick={back}>
+                    <ArrowLeft size={18} /> BACK
+                  </button>
+                  <button type="button" className="cp-btn cp-btn-primary" onClick={submitRegistration} disabled={submitting}>
+                    {submitting ? "TRANSMITTING..." : <>CONFIRM <Send size={18} /></>}
+                  </button>
+                </div>
+              </section>
+            )}
+          </>
+        )}
+      </main>
+    </div>
+  );
+}
 
-          {/* =====================================
-              STEP 5
-          ===================================== */}
-
-          {step === 5 && (
-            <section className="cp-screen">
-              <div className="cp-section-kicker">
-                STEP 05 // FINAL REVIEW
-              </div>
-
-              <h2>
-                VERIFY{" "}
-                <span>YOUR DOSSIER</span>
-              </h2>
-
-              <div className="cp-review">
-                <ReviewRow
-                  label="EVENT"
-                  value={
-                    EVENT_DATABASE[
-                      selectedEvent
-                    ]?.name || "-"
-                  }
-                />
-
-                <ReviewRow
-                  label="CREW SIZE"
-                  value={
-                    teamConfig?.label || "-"
-                  }
-                />
-
-                <ReviewRow
-                  label="OPERATIVES"
-                  value={String(
-                    participantCount
-                  )}
-                />
-
-                <ReviewRow
-                  label="TOTAL"
-                  value={`₹${amount}`}
-                />
-
-                <ReviewRow
-                  label="TRANSACTION"
-                  value={
-                    form.transactionId
-                  }
-                />
-              </div>
-
-              <div className="cp-review-members">
-                {form.participants.map(
-                  (participant, index) => (
-                    <div key={index}>
-                      <b>
-                        {String(
-                          index + 1
-                        ).padStart(2, "0")}{" "}
-                        —{" "}
-                        {
-                          participant.fullName
-                        }
-                      </b>
-
-                      <span>
-                        {
-                          participant.college
-                        }{" "}
-                        ·{" "}
-                        {
-                          participant.branch
-                        }{" "}
-                        ·{" "}
-                        {participant.year}
-                      </span>
-                    </div>
-                  )
-                )}
-              </div>
-
-              <div className="cp-actions">
-                <button
-                  className="cp-secondary"
-                  onClick={back}
-                  disabled={submitting}
-                >
-                  ← EDIT
-                </button>
-
-                <button
-                  className="cp-primary"
-                  onClick={
-                    submitRegistration
-                  }
-                  disabled={submitting}
-                >
-                  {submitting
-                    ? "TRANSMITTING..."
-                    : "CONFIRM REGISTRATION →"}
-                </button>
-              </div>
-            </section>
-          )}
-
-          {/* =====================================
-              STEP 6 - SUCCESS
-          ===================================== */}
-
-          {step === 6 && (
-            <section className="cp-screen cp-success">
-              <div className="cp-success-icon">
-                ✓
-              </div>
-
-              <div className="cp-stamp">
-                TRANSMISSION RECEIVED
-              </div>
-
-              <h2>
-                REGISTRATION{" "}
-                <span>AUTHORIZED</span>
-              </h2>
-
-              <p>
-                Your registration dossier has been
-                transmitted successfully.
-              </p>
-
-              <p className="cp-muted">
-                Your registration details have been
-                sent to the registration database.
-              </p>
-
-              <button
-                className="cp-primary"
-                onClick={reset}
-              >
-                REGISTER ANOTHER CREW →
-              </button>
-            </section>
-          )}
-        </main>
-
-        {/* FOOTER */}
-
-        <footer className="cp-reg-footer">
-          CYBERPUNK 2026 // AUTHORIZED REGISTRATION
-          TERMINAL
-        </footer>
-      </div>
-    );
-  }
-
-  /* ==========================================
-    TEXT / INPUT FIELD
-  ========================================== */
-
-  function Field({
-    label,
-    value,
-    onChange,
-    type = "text",
-  }) {
-    return (
-      <label className="cp-field">
-        <span>{label}</span>
-
-        <input
-          type={type}
-          value={value}
-          onChange={(e) =>
-            onChange(e.target.value)
-          }
-          required
-        />
-      </label>
-    );
-  }
-
-  /* ==========================================
-    SELECT FIELD
-  ========================================== */
-
-  function SelectField({
-    label,
-    value,
-    options,
-    onChange,
-  }) {
-    return (
-      <label className="cp-field">
-        <span>{label}</span>
-
-        <select
-          value={value}
-          onChange={(e) =>
-            onChange(e.target.value)
-          }
-          required
-        >
-          <option value="">
-            SELECT {label}
-          </option>
-
-          {options.map((option) => (
-            <option
-              key={option}
-              value={option}
-            >
-              {option}
-            </option>
-          ))}
-        </select>
-      </label>
-    );
-  }
-
-  /* ==========================================
-    REVIEW ROW
-  ========================================== */
-
-  function ReviewRow({
-    label,
-    value,
-  }) {
-    return (
-      <div className="cp-review-row">
-        <span>{label}</span>
-
-        <strong>{value}</strong>
-      </div>
-    );
-  }
-
-  export default Registration;
+export default Registration;
