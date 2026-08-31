@@ -14,8 +14,7 @@ const eventsData = [
     fee: 'Rs. 150 per team',
     prize: 'Rs. 2,000 + certificates',
     team: '2-4 Members',
-    fullDesc:
-      "Put your cybersecurity skills to the ultimate test in Hacker's Heist, a competitive Capture The Flag challenge packed with puzzles, technical challenges, and problem-solving. Hosted on CTFd with infrastructure support from Azure/AWS EC2, participants will battle through progressively difficult challenges and climb the leaderboard.",
+    fullDesc: "Put your cybersecurity skills to the ultimate test in Hacker's Heist, a competitive Capture The Flag challenge packed with puzzles, technical challenges, and problem-solving. Hosted on CTFd with infrastructure support from Azure/AWS EC2, participants will battle through progressively difficult challenges and climb the leaderboard.",
     highlights: [
       '3 levels of challenges: Intermediate, Hard, and Intense.',
       'Team-based CTF competition with 2-4 members.',
@@ -25,7 +24,7 @@ const eventsData = [
   {
     id: 'ai-arena',
     title: 'WEB-3 Hackathon',
-    category: 'AI & Gaming',
+    category: 'Hackathon',
     icon: Cpu,
     image: '/assets/web3--.jpeg',
     date: '10 SEPT 2026 // 6-HOUR CHALLENGE',
@@ -33,8 +32,7 @@ const eventsData = [
     fee: 'Rs. 250 per team',
     prize: 'Rs. 3,000 prize pool',
     team: 'Team event',
-    fullDesc:
-      'Build the decentralized future at the Web3 Hackathon! Teams will tackle real-world problem statements, develop innovative decentralized solutions, receive industry mentorship, and pitch their projects to a judging panel. From idea to implementation, turn your Web3 vision into something that actually works.',
+    fullDesc: 'Build the decentralized future at the Web3 Hackathon! Teams will tackle real-world problem statements, develop innovative decentralized solutions, receive industry mentorship, and pitch their projects to a judging panel. From idea to implementation, turn your Web3 vision into something that actually works.',
     highlights: [
       '6-hour Web3 innovation challenge.',
       'Build solutions for real-world problems.',
@@ -53,8 +51,7 @@ const eventsData = [
     fee: 'Rs. 140 per team',
     prize: 'Up to Rs. 1,500 prize pool',
     team: 'Team event',
-    fullDesc:
-      'Step into the role of a cyber detective in DetectyX, an interactive digital crime investigation where every clue brings you closer to the culprit. Follow the trail through OSINT investigation, suspect interrogation, metadata analysis, and digital forensics to crack the case.',
+    fullDesc: 'Step into the role of a cyber detective in DetectyX, an interactive digital crime investigation where every clue brings you closer to the culprit. Follow the trail through OSINT investigation, suspect interrogation, metadata analysis, and digital forensics to crack the case.',
     highlights: [
       '3 interconnected investigation rounds.',
       'OSINT and crime-scene investigation.',
@@ -65,7 +62,7 @@ const eventsData = [
   {
     id: 'ui-cyberpunk',
     title: 'Campus Rush',
-    category: 'Design & Media',
+    category: 'Fun & Games',
     icon: Zap,
     image: '/assets/campus-rush.jpeg',
     date: '10 SEPT 2026 // TIME TBA',
@@ -73,8 +70,7 @@ const eventsData = [
     fee: 'Rs. 150 per team',
     prize: 'Rs. 1,500 prize pool',
     team: 'Team event',
-    fullDesc:
-      'Get ready for Campus Rush, a high-energy battle of speed, teamwork, strategy, and presence of mind! Race through a campus-wide treasure hunt, conquer a series of physical and mental challenges, and make it to the ultimate blindfolded RC-car finale. Only the fastest and smartest team will survive the rush.',
+    fullDesc: 'Get ready for Campus Rush, a high-energy battle of speed, teamwork, strategy, and presence of mind! Race through a campus-wide treasure hunt, conquer a series of physical and mental challenges, and make it to the ultimate blindfolded RC-car finale. Only the fastest and smartest team will survive the rush.',
     highlights: [
       'Campus-wide treasure hunt with 8 clues.',
       'Challenge Arena: Cup Pyramid, Puzzle Challenge, and Balloon Burst.',
@@ -88,9 +84,12 @@ const Events = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeModalEvent, setActiveModalEvent] = useState(null);
 
-  const categories = ['All', 'Coding & Hacking', 'AI & Gaming', 'Design & Media'];
+  const categories = ['All', 'CTF Event', 'Coding & Hacking', 'Hackathon', 'Fun & Games'];
+  
   const filteredEvents =
-    selectedCategory === 'All' ? eventsData : eventsData.filter((e) => e.category === selectedCategory);
+    selectedCategory === 'All' 
+      ? eventsData 
+      : eventsData.filter((e) => e.category === selectedCategory);
 
   const openModal = (eventObj) => {
     playHeistClickSound();
@@ -112,6 +111,7 @@ const Events = () => {
 
     const registrationEvent = eventMap[eventId];
     if (registrationEvent) {
+      // This will safely route you to the registration page and auto-select the event!
       window.location.href = `/registration?event=${registrationEvent}`;
     } else {
       window.location.href = '/registration';
