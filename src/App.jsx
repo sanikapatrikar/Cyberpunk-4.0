@@ -19,6 +19,12 @@ function Home() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
+    // Prevent mobile browser scroll restoration from reopening the page
+    // halfway down the document.
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
     // Check user accessibility setting for reduced motion
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
@@ -26,13 +32,17 @@ function Home() {
     const handleMotionChange = (e) => setPrefersReducedMotion(e.matches);
     mediaQuery.addEventListener('change', handleMotionChange);
 
-    // Initialize Lenis smooth scroll engine
+    // Initialize Lenis smooth scroll engine.
+    // Keep touch scrolling native on phones; ScrollTrigger's
+    // normalizeScroll handles the pinned cinematic there.
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: isMobile ? 1.0 : 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       smoothTouch: false,
-      touchMultiplier: 1.5,
+      touchMultiplier: isMobile ? 1 : 1.5,
     });
 
     // Synchronize Lenis smooth scroll with GSAP ScrollTrigger
@@ -47,6 +57,10 @@ function Home() {
     return () => {
       mediaQuery.removeEventListener('change', handleMotionChange);
       lenis.destroy();
+
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'auto';
+      }
     };
   }, []);
 

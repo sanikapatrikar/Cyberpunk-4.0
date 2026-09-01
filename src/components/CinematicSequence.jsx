@@ -94,15 +94,36 @@ const CinematicSequence = ({ onSequenceComplete }) => {
       ctx.restore();
     }
 
+    // Mobile browser stability: normalize touch scrolling so the pinned
+    // cinematic does not jump past the sequence because of viewport/address-bar changes.
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+    if (isMobile) {
+      ScrollTrigger.config({ ignoreMobileResize: true });
+      ScrollTrigger.normalizeScroll(true);
+
+      if (window.scrollY > 0) {
+        window.scrollTo(0, 0);
+      }
+    }
+
     // GSAP ScrollTrigger Master Timeline
     const ctxGsap = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top top',
-          end: '+=450%', // 4.5x viewport scroll height for smooth, rich scrubbing
+          // Give mobile users more scroll room so a touch swipe does not
+          // race through the entire cinematic and immediately reveal Crew.
+          end: () =>
+            window.matchMedia('(max-width: 768px)').matches
+              ? '+=650%'
+              : '+=450%',
           pin: true,
-          scrub: 0.6,
+          pinSpacing: true,
+          scrub: window.matchMedia('(max-width: 768px)').matches ? 0.9 : 0.6,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
             const prog = self.progress;
             setScrollProgress(prog);
@@ -196,6 +217,10 @@ const CinematicSequence = ({ onSequenceComplete }) => {
     return () => {
       window.removeEventListener('resize', handleResize);
       ctxGsap.revert();
+
+      if (window.matchMedia('(max-width: 768px)').matches) {
+        ScrollTrigger.normalizeScroll(false);
+      }
     };
   }, [onSequenceComplete]);
 

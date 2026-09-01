@@ -33,7 +33,7 @@ const eventsData = [
     venue: 'To Be Decided',
     fee: 'Rs. 250 per team',
     prize: 'Rs. 3,000 prize pool',
-    team: 'Team event',
+    team: '3-5 Members',
     fullDesc: 'Build the decentralized future at the Web3 Hackathon! Teams will tackle real-world problem statements, develop innovative decentralized solutions, receive industry mentorship, and pitch their projects to a judging panel. From idea to implementation, turn your Web3 vision into something that actually works.',
     highlights: [
       '6-hour Web3 innovation challenge.',
@@ -53,7 +53,7 @@ const eventsData = [
     venue: 'BS-08 / BS-09',
     fee: 'Rs. 140 per team',
     prize: 'Up to Rs. 1,500 prize pool',
-    team: 'Team event',
+    team: '2-4 Members',
     fullDesc: 'Step into the role of a cyber detective in DetectyX, an interactive digital crime investigation where every clue brings you closer to the culprit. Follow the trail through OSINT investigation, suspect interrogation, metadata analysis, and digital forensics to crack the case.',
     highlights: [
       '3 interconnected investigation rounds.',
@@ -73,7 +73,7 @@ const eventsData = [
     venue: 'College Campus / Open Area',
     fee: 'Rs. 150 per team',
     prize: 'Rs. 1,500 prize pool',
-    team: 'Team event',
+    team: '2-3 Members',
     fullDesc: 'Get ready for Campus Rush, a high-energy battle of speed, teamwork, strategy, and presence of mind! Race through a campus-wide treasure hunt, conquer a series of physical and mental challenges, and make it to the ultimate blindfolded RC-car finale. Only the fastest and smartest team will survive the rush.',
     highlights: [
       'Campus-wide treasure hunt with 8 clues.',

@@ -24,6 +24,63 @@ const EVENT_ICONS = {
   NGV: Zap,
 };
 
+const EVENT_TEAM_RULES = {
+  HEIST: { min: 2, max: 4 },
+  DETECTYX: { min: 2, max: 4 },
+  WEB3: { min: 3, max: 5 },
+  NGV: { min: 2, max: 3 },
+};
+
+const getAvailableTeamSizes = (eventKey) => {
+  const rule = EVENT_TEAM_RULES[eventKey];
+  if (!rule) return Object.entries(TEAM_SIZE_DATABASE);
+
+  const sizes = Object.entries(TEAM_SIZE_DATABASE).filter(
+    ([, item]) =>
+      Number(item?.count) >= rule.min &&
+      Number(item?.count) <= rule.max
+  );
+
+  if (eventKey === "WEB3" && rule.max >= 5) {
+    const hasFive = sizes.some(([, item]) => Number(item?.count) === 5);
+
+    if (!hasFive) {
+      const four = Object.entries(TEAM_SIZE_DATABASE).find(
+        ([, item]) => Number(item?.count) === 4
+      );
+
+      if (four) {
+        const [, item] = four;
+        sizes.push([
+          "WEB3_FIVE",
+          {
+            ...item,
+            count: 5,
+            label: "5 Members",
+            description: "5 operatives",
+          },
+        ]);
+      }
+    }
+  }
+
+  return sizes;
+};
+
+const getSelectedTeamSizeConfig = (key) => {
+  if (key === "WEB3_FIVE") {
+    const four = Object.values(TEAM_SIZE_DATABASE).find(
+      (item) => Number(item?.count) === 4
+    );
+    return four
+      ? { ...four, count: 5, label: "5 Members", description: "5 operatives" }
+      : null;
+  }
+
+  return getTeamSizeConfig(key);
+};
+
+
 const PROGRESS_STEPS = [
   { step: 1, label: "EVENT" },
   { step: 2, label: "DOSSIER" },
@@ -43,7 +100,13 @@ const createParticipant = () => ({
 
 const createEmptyForm = () => ({
   teamName: "",
-  participants: [createParticipant(), createParticipant(), createParticipant(), createParticipant()],
+  participants: [
+    createParticipant(),
+    createParticipant(),
+    createParticipant(),
+    createParticipant(),
+    createParticipant(),
+  ],
   transactionId: "",
   paymentScreenshot: null,
 });
@@ -98,7 +161,7 @@ function Registration() {
   }, []);
 
   const teamConfig = useMemo(
-    () => getTeamSizeConfig(selectedTeamSize),
+    () => getSelectedTeamSizeConfig(selectedTeamSize),
     [selectedTeamSize]
   );
 
@@ -149,6 +212,7 @@ function Registration() {
   const chooseEvent = (key) => {
     playHeistClickSound();
     setSelectedEvent(key);
+    setSelectedTeamSize("");
     setError("");
   };
 
@@ -165,7 +229,7 @@ function Registration() {
       return;
     }
 
-    const config = getTeamSizeConfig(key);
+    const config = getSelectedTeamSizeConfig(key);
     if (!config) {
       setError("Invalid team configuration.");
       return;
@@ -257,6 +321,15 @@ function Registration() {
 
       if (!teamConfig) {
         setError("Invalid crew configuration.");
+        return;
+      }
+
+      const allowedTeamSize = getAvailableTeamSizes(selectedEvent).some(
+        ([key]) => key === selectedTeamSize
+      );
+
+      if (!allowedTeamSize) {
+        setError("Selected crew size is not available for this event.");
         return;
       }
 
@@ -763,9 +836,7 @@ function Registration() {
                   <option value="">
                     SELECT TEAM SIZE ▼
                   </option>
-                  {Object.entries(
-                    TEAM_SIZE_DATABASE
-                  ).map(([key, item]) => (
+                  {getAvailableTeamSizes(selectedEvent).map(([key, item]) => (
                     <option
                       key={key}
                       value={key}
