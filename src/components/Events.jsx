@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, Shield, Cpu, Zap, Trophy, Clock, Users, ArrowRight, X } from 'lucide-react';
+import { Terminal, Shield, Cpu, Zap, Trophy, Clock, ArrowRight, X } from 'lucide-react';
 import { playHeistClickSound } from '../utils/audio';
 
 const eventsData = [
@@ -8,59 +8,78 @@ const eventsData = [
     title: 'HACKERS HEIST',
     category: 'CTF Event',
     icon: Terminal,
-    date: '10 SEPT // 10:00 AM',
-    prize: '$2,500 PRIZE POOL',
-    team: '1-3 Members',
-    shortDesc: 'Crack high-security algorithmic encrypted vaults under extreme timed pressure.',
-    fullDesc: 'Participants act as elite heist programmers tasked with bypassing multi-layer cybersecurity firewalls, decrypting quantum ciphers, and retrieving master cryptographic keys.',
-    rules: [
-      'Bring your own machine.',
-      
+    // Fixed extension to .png based on your terminal
+    image: '/assets/hacker-heist.png', 
+    date: '10 SEPT 2026 // TIME TBA',
+    venue: 'BS-14',
+    fee: 'Rs. 150 per team',
+    prize: 'Rs. 2,000 + certificates',
+    team: '2-4 Members',
+    fullDesc: 'Put your cybersecurity skills to the ultimate test in Hacker\'s Heist, a competitive Capture The Flag challenge packed with puzzles, technical challenges, and problem-solving. Hosted on CTFd with infrastructure support from Azure/AWS EC2, participants will battle through progressively difficult challenges and climb the leaderboard.',
+    highlights: [
+      '3 levels of challenges: Intermediate, Hard, and Intense.',
+      'Team-based CTF competition with 2-4 members.',
+      'Challenges ranging from 100 to 600 points.',
     ],
   },
   {
     id: 'ai-arena',
-    title: 'WEB-3 Hackthon',
-    category: 'AI & Gaming',
+    title: 'WEB-3 Hackathon',
+    category: 'Hackathon',
     icon: Cpu,
-    date: '10 SEPT // 01:30 PM',
-    prize: '3,000 PRIZE POOL',
-    team: '1-4 Members',
-    shortDesc: 'Deploy autonomous LLM agents to orchestrate or defend against simulated high-stakes bank heists.',
-    fullDesc: 'Build, fine-tune, and prompt-engineer AI neural network agents competing head-to-head in real-time strategic heist scenario simulations.',
-    rules: [
-      'API access keys provided at commencement.',
-      'Agents evaluated on latency, decision accuracy, and stealth evasion score.',
+    // Fixed extension to .jpeg
+    image: '/assets/web3--.jpeg', 
+    date: '10 SEPT 2026 // 6-HOUR CHALLENGE',
+    venue: 'To Be Decided',
+    fee: 'Rs. 250 per team',
+    prize: 'Rs. 3,000 prize pool',
+    team: 'Team event',
+    fullDesc: 'Build the decentralized future at the Web3 Hackathon! Teams will tackle real-world problem statements, develop innovative decentralized solutions, receive industry mentorship, and pitch their projects to a judging panel. From idea to implementation, turn your Web3 vision into something that actually works.',
+    highlights: [
+      '6-hour Web3 innovation challenge.',
+      'Build solutions for real-world problems.',
+      'Industry mentorship and hands-on development.',
+      'Final project demonstration and PPT pitch.',
     ],
   },
   {
     id: 'cyber-ctf',
-    title: 'Dectectyx',
+    title: 'Detectyx',
     category: 'Coding & Hacking',
     icon: Shield,
-    date: '10 SEPT // 03:00 PM',
-    prize: '$2,000 PRIZE POOL',
-    team: '2-4 Members',
-    shortDesc: 'Penetrate fortified corporate servers, exploit zero-days, and capture hidden digital flags.',
-    fullDesc: 'A 4-hour offensive security competition testing web penetration, binary exploitation, reverse engineering, and forensic memory analysis.',
-    rules: [
-      'No denial-of-service attacks on competition infrastructure.',
-      'Writeups required for top 3 flag submissions.',
+    // Fixed extension to .jpeg
+    image: '/assets/detectyx--.jpeg', 
+    date: '10 SEPT 2026 // TIME TBA',
+    venue: 'BS-08 / BS-09',
+    fee: 'Rs. 140 per team',
+    prize: 'Up to Rs. 1,500 prize pool',
+    team: 'Team event',
+    fullDesc: 'Step into the role of a cyber detective in DetectyX, an interactive digital crime investigation where every clue brings you closer to the culprit. Follow the trail through OSINT investigation, suspect interrogation, metadata analysis, and digital forensics to crack the case.',
+    highlights: [
+      '3 interconnected investigation rounds.',
+      'OSINT and crime-scene investigation.',
+      'Metadata analysis and suspect interrogation.',
+      'Digital forensics and hidden-data recovery.',
     ],
   },
   {
     id: 'ui-cyberpunk',
-    title: 'Nagpur got Voilent',
-    category: 'Design & Media',
+    title: 'Campus Rush',
+    category: 'Fun & Games',
     icon: Zap,
-    date: '10 SEPT // 11:30 AM',
-    prize: '$1,500 PRIZE POOL',
-    team: '1-2 Members',
-    shortDesc: 'Design futuristic dystopian heist interfaces, HUDs, and interactive WebGL experiences.',
-    fullDesc: 'Craft high-fidelity dark neon UI designs for heist tactical consoles, biometric scanners, and futuristic bank security dashboards.',
-    rules: [
-      'Design software allowed: Figma, Adobe XD, Blender, WebGL/Spline.',
-      'Assets generated must be original or open-source vector graphics.',
+    // Fixed extension to .jpeg
+    image: '/assets/campus-rush.jpeg', 
+    date: '10 SEPT 2026 // TIME TBA',
+    venue: 'College Campus / Open Area',
+    fee: 'Rs. 150 per team',
+    prize: 'Rs. 1,500 prize pool',
+    team: 'Team event',
+    fullDesc: 'Get ready for Campus Rush, a high-energy battle of speed, teamwork, strategy, and presence of mind! Race through a campus-wide treasure hunt, conquer a series of physical and mental challenges, and make it to the ultimate blindfolded RC-car finale. Only the fastest and smartest team will survive the rush.',
+    highlights: [
+      'Campus-wide treasure hunt with 8 clues.',
+      'Challenge Arena: Cup Pyramid, Puzzle Challenge, and Balloon Burst.',
+      'Guess the Word time-advantage challenge.',
+      'Blindfolded RC Car Final Showdown.',
     ],
   },
 ];
@@ -69,7 +88,7 @@ const Events = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeModalEvent, setActiveModalEvent] = useState(null);
 
-  const categories = ['All', 'Coding & Hacking', 'AI & Gaming', 'Design & Media'];
+  const categories = ['All', 'Coding & Hacking', 'Hackathon', 'Fun & Games'];
   const filteredEvents =
     selectedCategory === 'All'
       ? eventsData
@@ -84,37 +103,22 @@ const Events = () => {
     setActiveModalEvent(null);
   };
 
-  //const handleRegisterClick = (eventId) => {
-  //  closeModal();
-  //  const regSection = document.getElementById('registration-section');
-  //  if (regSection) {
-   //   regSection.scrollIntoView({ behavior: 'smooth' });
-  //  }
- //};
-
-
-//start
   const handleRegisterClick = (eventId) => {
-  closeModal();
+    closeModal();
+    const eventMap = {
+      'cyber-hack': 'HEIST',
+      'ai-arena': 'WEB3',
+      'cyber-ctf': 'DETECTYX',
+      'ui-cyberpunk': 'NGV',
+    };
+    const registrationEvent = eventMap[eventId];
 
-  const eventMap = {
-    'cyber-hack': 'HEIST',
-    'ai-arena': 'WEB3',
-    'cyber-ctf': 'DETECTYX',
-    'ui-cyberpunk': 'NGV',
+    if (registrationEvent) {
+      window.location.href = `/registration?event=${registrationEvent}`;
+    } else {
+      window.location.href = '/registration';
+    }
   };
-
-  const registrationEvent = eventMap[eventId];
-
-  if (registrationEvent) {
-    window.location.href = `/registration?event=${registrationEvent}`;
-  } else {
-    window.location.href = '/registration';
-  }
-};
-
-// done
-
 
   return (
     <section id="events-section" className="relative py-24 bg-[#050505] text-white border-t border-zinc-900">
@@ -150,55 +154,62 @@ const Events = () => {
           ))}
         </div>
 
-        {/* Events Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Events Grid (Poster Layout) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {filteredEvents.map((evt) => {
-            const IconComp = evt.icon;
             return (
               <div
                 key={evt.id}
-                className="group relative bg-zinc-950/90 border border-zinc-800/80 hover:border-red-600/80 rounded-2xl p-6 transition-all duration-300 flex flex-col justify-between shadow-[0_0_20px_rgba(0,0,0,0.6)] hover:shadow-[0_0_35px_rgba(230,0,0,0.25)] hover:-translate-y-1.5"
+                className="group relative h-[450px] rounded-2xl overflow-hidden border border-zinc-800/80 hover:border-red-600/80 transition-all duration-500 shadow-[0_0_20px_rgba(0,0,0,0.6)] hover:shadow-[0_0_40px_rgba(230,0,0,0.4)] hover:-translate-y-2 cursor-pointer"
+                onClick={() => openModal(evt)}
               >
-                <div>
-                  {/* Category & Icon */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono-cyber text-xs text-red-400 bg-red-950/60 border border-red-900/60 px-3 py-1 rounded-md">
-                      {evt.category}
-                    </span>
-                    <div className="p-2 bg-red-600/10 border border-red-600/30 rounded-lg text-red-500 group-hover:bg-red-600 group-hover:text-white transition-colors duration-300">
-                      <IconComp size={22} />
-                    </div>
-                  </div>
+                {/* Poster Background */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 filter brightness-75 group-hover:brightness-50"
+                  style={{ backgroundImage: `url(${evt.image})` }}
+                />
+                
+                {/* Gradient Overlays for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/80 transition-opacity duration-300 group-hover:opacity-90" />
 
-                  <h3 className="font-bebas text-3xl tracking-wider text-white mb-2 group-hover:text-red-500 transition-colors">
+                {/* Content Container */}
+                <div className="relative h-full p-8 flex flex-col items-center justify-center text-center">
+                  
+                  {/* Category Badge - Top Center */}
+                  <span className="absolute top-6 font-mono-cyber text-xs text-red-400 bg-red-950/80 border border-red-900/80 px-4 py-1.5 rounded-md backdrop-blur-sm shadow-[0_0_10px_rgba(230,0,0,0.3)]">
+                    {evt.category}
+                  </span>
+
+                  {/* Main Event Title - Centered */}
+                  <h3 className="font-bebas text-5xl sm:text-6xl tracking-wider text-white mt-8 mb-4 drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] group-hover:text-red-500 transition-colors duration-300">
                     {evt.title}
                   </h3>
-                  <p className="text-gray-400 text-sm line-clamp-2 mb-6">
-                    {evt.shortDesc}
-                  </p>
-                </div>
 
-                <div>
-                  {/* Meta Details */}
-                  <div className="flex items-center justify-between text-xs font-mono-cyber text-gray-400 border-t border-zinc-800 pt-4 mb-4">
-                    <span className="flex items-center gap-1.5 text-gray-300">
-                      <Clock size={14} className="text-red-500" />
+                  {/* Hover Reveal: Register Button */}
+                  <div className="opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 mt-4">
+                    <button
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        openModal(evt);
+                      }}
+                      className="px-8 py-3 bg-red-600 hover:bg-red-500 text-white font-bebas text-2xl tracking-wider rounded-xl transition-all shadow-[0_0_25px_rgba(230,0,0,0.8)] flex items-center gap-2"
+                    >
+                      MISSION BRIEF & REGISTER <ArrowRight size={20} />
+                    </button>
+                  </div>
+
+                  {/* Meta Details - Bottom fixed */}
+                  <div className="absolute bottom-6 w-full px-8 flex items-center justify-between text-sm font-mono-cyber">
+                    <span className="flex items-center gap-2 text-gray-300 bg-black/60 px-3 py-1.5 rounded-md backdrop-blur-sm border border-zinc-800">
+                      <Clock size={16} className="text-red-500" />
                       {evt.date}
                     </span>
-                    <span className="flex items-center gap-1.5 text-red-400 font-bold">
-                      <Trophy size={14} />
+                    <span className="flex items-center gap-2 text-red-400 font-bold bg-black/60 px-3 py-1.5 rounded-md backdrop-blur-sm border border-zinc-800">
+                      <Trophy size={16} />
                       {evt.prize}
                     </span>
                   </div>
 
-                  {/* Card Action Button */}
-                  <button
-                    onClick={() => openModal(evt)}
-                    className="w-full py-3 bg-zinc-900 group-hover:bg-red-600 text-gray-200 group-hover:text-white font-bebas text-xl tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 border border-zinc-700 group-hover:border-red-500 cursor-pointer"
-                  >
-                    MISSION BRIEF & REGISTER
-                    <ArrowRight size={18} />
-                  </button>
                 </div>
               </div>
             );
@@ -210,7 +221,6 @@ const Events = () => {
       {activeModalEvent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
           <div className="relative w-full max-w-2xl bg-zinc-950 border border-red-600/60 rounded-2xl p-6 sm:p-8 shadow-[0_0_50px_rgba(230,0,0,0.4)] text-white max-h-[90vh] overflow-y-auto">
-            {/* Close Button */}
             <button
               onClick={closeModal}
               className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white bg-zinc-900 rounded-full cursor-pointer"
@@ -225,32 +235,44 @@ const Events = () => {
               {activeModalEvent.title}
             </h3>
 
+            <h4 className="font-bebas text-2xl tracking-wider text-red-500 mb-2">ABOUT THIS EVENT</h4>
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
               {activeModalEvent.fullDesc}
             </p>
 
             <div className="grid grid-cols-2 gap-4 bg-zinc-900/80 p-4 rounded-xl border border-zinc-800 mb-6 font-mono-cyber text-xs">
               <div>
-                <span className="text-gray-500 block mb-1">DATE & TIME</span>
+                <span className="text-gray-500 block mb-1">DATE / TIME</span>
                 <span className="text-white font-bold">{activeModalEvent.date}</span>
               </div>
               <div>
-                <span className="text-gray-500 block mb-1">PRIZE POOL</span>
+                <span className="text-gray-500 block mb-1">VENUE</span>
+                <span className="text-white font-bold">{activeModalEvent.venue}</span>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-1">ENTRY FEE</span>
+                <span className="text-red-400 font-bold">{activeModalEvent.fee}</span>
+              </div>
+              <div>
+                <span className="text-gray-500 block mb-1">PRIZE</span>
                 <span className="text-red-400 font-bold">{activeModalEvent.prize}</span>
               </div>
             </div>
 
             <div className="mb-6">
-              <h4 className="font-bebas text-2xl tracking-wider text-red-500 mb-2">RULES & PROTOCOLS</h4>
+              <h4 className="font-bebas text-2xl tracking-wider text-red-500 mb-2">EVENT HIGHLIGHTS</h4>
               <ul className="list-disc list-inside text-gray-400 text-sm space-y-1">
-                {activeModalEvent.rules.map((rule, idx) => (
-                  <li key={idx}>{rule}</li>
+                {activeModalEvent.highlights.map((highlight, idx) => (
+                  <li key={idx}>{highlight}</li>
                 ))}
               </ul>
             </div>
 
             <button
-              onClick={() => handleRegisterClick(activeModalEvent.id)}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleRegisterClick(activeModalEvent.id);
+              }}
               className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bebas text-2xl tracking-widest rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(230,0,0,0.6)] cursor-pointer"
             >
               REGISTER FOR THIS EVENT NOW

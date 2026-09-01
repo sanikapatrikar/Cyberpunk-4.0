@@ -31,7 +31,7 @@ export const EVENT_DATABASE = {
   },
   'violent': {
     code: 'CYB-EVT-04',
-    name: 'Nagpur’s Got Violent',
+    name: 'Campus Rush',
     subtitle: 'Cyber Warfare Arena',
     icon: '🎭',
     desc: 'High-octane cyber warfare simulation. Real-time red vs blue tactical defense battle testing speed, strategy, and teamwork.',
