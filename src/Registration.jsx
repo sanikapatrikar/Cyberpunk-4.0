@@ -333,6 +333,11 @@ function Registration() {
         return;
       }
 
+      if (!form.teamName.trim()) {
+        setError("Enter a team / crew codename to continue.");
+        return;
+      }
+
       const participantError = validateParticipants();
       if (participantError) {
         setError(participantError);
@@ -451,6 +456,10 @@ function Registration() {
 
       if (!teamConfig) {
         throw new Error("Team configuration is missing.");
+      }
+
+      if (!form.teamName.trim()) {
+        throw new Error("Team / crew codename is required.");
       }
 
       if (!form.transactionId.trim()) {
@@ -694,14 +703,6 @@ function Registration() {
           </div>
         )}
 
-        {/* ERROR */}
-
-        {error && (
-          <div className="cp-error">
-            ⚠ {error}
-          </div>
-        )}
-
         {/* =====================================
             STEP 1: EVENT SELECTION
         ===================================== */}
@@ -781,6 +782,12 @@ function Registration() {
                 );
               })}
             </div>
+
+            {error && (
+              <div className="cp-error">
+                ⚠ {error}
+              </div>
+            )}
 
             <button
               className="cp-primary"
@@ -995,6 +1002,12 @@ function Registration() {
               </div>
             )}
 
+            {error && (
+              <div className="cp-error">
+                ⚠ {error}
+              </div>
+            )}
+
             <div className="cp-actions">
               <button
                 className="cp-secondary"
@@ -1151,6 +1164,12 @@ function Registration() {
               </div>
             </div>
 
+            {error && (
+              <div className="cp-error">
+                ⚠ {error}
+              </div>
+            )}
+
             <div className="cp-actions">
               <button
                 className="cp-secondary"
@@ -1245,6 +1264,12 @@ function Registration() {
                 )
               )}
             </div>
+
+            {error && (
+              <div className="cp-error">
+                ⚠ {error}
+              </div>
+            )}
 
             <div className="cp-actions">
               <button
