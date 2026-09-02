@@ -9,7 +9,7 @@ const eventsData = [
     category: 'CTF Event',
     icon: Terminal,
     // Fixed extension to .png based on your terminal
-    image: '/assets/hacker-heist.png', 
+    image: '/assets/hacker-heist.png',
     date: '10 SEPT 2026 // TIME TBA',
     venue: 'BS-14',
     fee: 'Rs. 150 per team',
@@ -28,7 +28,7 @@ const eventsData = [
     category: 'Hackathon',
     icon: Cpu,
     // Fixed extension to .jpeg
-    image: '/assets/web3--.jpeg', 
+    image: '/assets/web3--.jpeg',
     date: '10 SEPT 2026 // 6-HOUR CHALLENGE',
     venue: 'To Be Decided',
     fee: 'Rs. 250 per team',
@@ -48,7 +48,7 @@ const eventsData = [
     category: 'Coding & Hacking',
     icon: Shield,
     // Fixed extension to .jpeg
-    image: '/assets/detectyx--.jpeg', 
+    image: '/assets/detectyx--.jpeg',
     date: '10 SEPT 2026 // TIME TBA',
     venue: 'BS-08 / BS-09',
     fee: 'Rs. 140 per team',
@@ -68,7 +68,7 @@ const eventsData = [
     category: 'Fun & Games',
     icon: Zap,
     // Fixed extension to .jpeg
-    image: '/assets/campus-rush.jpeg', 
+    image: '/assets/campus-rush.jpeg',
     date: '10 SEPT 2026 // TIME TBA',
     venue: 'College Campus / Open Area',
     fee: 'Rs. 150 per team',
@@ -88,10 +88,13 @@ const Events = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeModalEvent, setActiveModalEvent] = useState(null);
 
-  const categories = ['All', 'Coding & Hacking', 'Hackathon', 'Fun & Games'];
-  const filteredEvents =
-    selectedCategory === 'All'
-      ? eventsData
+const categories = ['All', 'CTF', 'Coding & Hacking', 'Hackathon', 'Fun & Games'];
+
+const filteredEvents =
+  selectedCategory === 'All'
+    ? eventsData
+    : selectedCategory === 'CTF'
+      ? eventsData.filter((e) => e.category === 'CTF Event')
       : eventsData.filter((e) => e.category === selectedCategory);
 
   const openModal = (eventObj) => {
@@ -105,12 +108,14 @@ const Events = () => {
 
   const handleRegisterClick = (eventId) => {
     closeModal();
+
     const eventMap = {
       'cyber-hack': 'HEIST',
       'ai-arena': 'WEB3',
       'cyber-ctf': 'DETECTYX',
       'ui-cyberpunk': 'NGV',
     };
+
     const registrationEvent = eventMap[eventId];
 
     if (registrationEvent) {
@@ -121,14 +126,18 @@ const Events = () => {
   };
 
   return (
-    <section id="events-section" className="relative py-24 bg-[#050505] text-white border-t border-zinc-900">
+    <section
+      id="events-section"
+      className="relative py-24 bg-[#050505] text-white border-t border-zinc-900"
+    >
       <div className="max-w-7xl mx-auto px-4 relative z-10">
-        
+
         {/* Section Title */}
         <div className="text-center mb-12">
           <p className="font-mono-cyber text-red-500 text-sm tracking-widest uppercase mb-2">
             // CLASSIFIED MISSIONS
           </p>
+
           <h2 className="font-bebas text-5xl sm:text-7xl tracking-widest">
             OPERATION <span className="text-red-600 text-glow-red">EVENTS</span>
           </h2>
@@ -164,17 +173,17 @@ const Events = () => {
                 onClick={() => openModal(evt)}
               >
                 {/* Poster Background */}
-                <div 
+                <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 filter brightness-75 group-hover:brightness-50"
                   style={{ backgroundImage: `url(${evt.image})` }}
                 />
-                
+
                 {/* Gradient Overlays for readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/80 transition-opacity duration-300 group-hover:opacity-90" />
 
                 {/* Content Container */}
                 <div className="relative h-full p-8 flex flex-col items-center justify-center text-center">
-                  
+
                   {/* Category Badge - Top Center */}
                   <span className="absolute top-6 font-mono-cyber text-xs text-red-400 bg-red-950/80 border border-red-900/80 px-4 py-1.5 rounded-md backdrop-blur-sm shadow-[0_0_10px_rgba(230,0,0,0.3)]">
                     {evt.category}
@@ -204,6 +213,7 @@ const Events = () => {
                       <Clock size={16} className="text-red-500" />
                       {evt.date}
                     </span>
+
                     <span className="flex items-center gap-2 text-red-400 font-bold bg-black/60 px-3 py-1.5 rounded-md backdrop-blur-sm border border-zinc-800">
                       <Trophy size={16} />
                       {evt.prize}
@@ -218,68 +228,123 @@ const Events = () => {
       </div>
 
       {/* Event Details Modal */}
-      {activeModalEvent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-          <div className="relative w-full max-w-2xl bg-zinc-950 border border-red-600/60 rounded-2xl p-6 sm:p-8 shadow-[0_0_50px_rgba(230,0,0,0.4)] text-white max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-white bg-zinc-900 rounded-full cursor-pointer"
-            >
-              <X size={20} />
-            </button>
+{activeModalEvent && (
+  <div
+    className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-start justify-center p-4 pt-[90px]"
+    onClick={closeModal}
+  >
+    <div
+      onClick={(event) => event.stopPropagation()}
+      className="relative w-full max-w-2xl bg-zinc-950 border border-red-600/60 rounded-2xl p-6 sm:p-8 shadow-[0_0_50px_rgba(230,0,0,0.4)] text-white max-h-[calc(100vh-110px)] overflow-y-auto"
+    >
 
-            <span className="font-mono-cyber text-xs text-red-500 uppercase tracking-widest block mb-2">
-              // CLASSIFIED DOSSIER
-            </span>
-            <h3 className="font-bebas text-4xl sm:text-5xl tracking-wider mb-4 text-glow-red">
-              {activeModalEvent.title}
-            </h3>
+      {/* Close Button */}
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          closeModal();
+        }}
+        className="absolute top-4 right-4 z-[10000] w-10 h-10 flex items-center justify-center text-gray-300 hover:text-white bg-zinc-900 hover:bg-red-600 border border-zinc-700 hover:border-red-500 rounded-full cursor-pointer transition-all duration-200"
+        aria-label="Close event details"
+      >
+        <X size={22} />
+      </button>
 
-            <h4 className="font-bebas text-2xl tracking-wider text-red-500 mb-2">ABOUT THIS EVENT</h4>
-            <p className="text-gray-300 text-sm leading-relaxed mb-6">
-              {activeModalEvent.fullDesc}
-            </p>
+      {/* Classified Dossier */}
+      <span className="font-mono-cyber text-xs text-red-500 uppercase tracking-widest block mb-2 pr-12">
+        // CLASSIFIED DOSSIER
+      </span>
 
-            <div className="grid grid-cols-2 gap-4 bg-zinc-900/80 p-4 rounded-xl border border-zinc-800 mb-6 font-mono-cyber text-xs">
-              <div>
-                <span className="text-gray-500 block mb-1">DATE / TIME</span>
-                <span className="text-white font-bold">{activeModalEvent.date}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block mb-1">VENUE</span>
-                <span className="text-white font-bold">{activeModalEvent.venue}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block mb-1">ENTRY FEE</span>
-                <span className="text-red-400 font-bold">{activeModalEvent.fee}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block mb-1">PRIZE</span>
-                <span className="text-red-400 font-bold">{activeModalEvent.prize}</span>
-              </div>
-            </div>
+      {/* Event Title */}
+      <h3 className="font-bebas text-4xl sm:text-5xl tracking-wider mb-4 text-glow-red">
+        {activeModalEvent.title}
+      </h3>
 
-            <div className="mb-6">
-              <h4 className="font-bebas text-2xl tracking-wider text-red-500 mb-2">EVENT HIGHLIGHTS</h4>
-              <ul className="list-disc list-inside text-gray-400 text-sm space-y-1">
-                {activeModalEvent.highlights.map((highlight, idx) => (
-                  <li key={idx}>{highlight}</li>
-                ))}
-              </ul>
-            </div>
+      {/* About Event */}
+      <h4 className="font-bebas text-2xl tracking-wider text-red-500 mb-2">
+        ABOUT THIS EVENT
+      </h4>
 
-            <button
-              onClick={(event) => {
-                event.stopPropagation();
-                handleRegisterClick(activeModalEvent.id);
-              }}
-              className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bebas text-2xl tracking-widest rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(230,0,0,0.6)] cursor-pointer"
-            >
-              REGISTER FOR THIS EVENT NOW
-            </button>
-          </div>
+      <p className="text-gray-300 text-sm leading-relaxed mb-6">
+        {activeModalEvent.fullDesc}
+      </p>
+
+      {/* Event Information */}
+      <div className="grid grid-cols-2 gap-4 bg-zinc-900/80 p-4 rounded-xl border border-zinc-800 mb-6 font-mono-cyber text-xs">
+
+        <div>
+          <span className="text-gray-500 block mb-1">
+            DATE / TIME
+          </span>
+
+          <span className="text-white font-bold">
+            {activeModalEvent.date}
+          </span>
         </div>
-      )}
+
+        <div>
+          <span className="text-gray-500 block mb-1">
+            VENUE
+          </span>
+
+          <span className="text-white font-bold">
+            {activeModalEvent.venue}
+          </span>
+        </div>
+
+        <div>
+          <span className="text-gray-500 block mb-1">
+            ENTRY FEE
+          </span>
+
+          <span className="text-red-400 font-bold">
+            {activeModalEvent.fee}
+          </span>
+        </div>
+
+        <div>
+          <span className="text-gray-500 block mb-1">
+            PRIZE
+          </span>
+
+          <span className="text-red-400 font-bold">
+            {activeModalEvent.prize}
+          </span>
+        </div>
+
+      </div>
+
+      {/* Event Highlights */}
+      <div className="mb-6">
+        <h4 className="font-bebas text-2xl tracking-wider text-red-500 mb-2">
+          EVENT HIGHLIGHTS
+        </h4>
+
+        <ul className="list-disc list-inside text-gray-400 text-sm space-y-1">
+          {activeModalEvent.highlights.map((highlight, idx) => (
+            <li key={idx}>
+              {highlight}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Register Button */}
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation();
+          handleRegisterClick(activeModalEvent.id);
+        }}
+        className="w-full py-4 bg-red-600 hover:bg-red-700 text-white font-bebas text-2xl tracking-widest rounded-xl transition-all duration-300 shadow-[0_0_25px_rgba(230,0,0,0.6)] cursor-pointer"
+      >
+        REGISTER FOR THIS EVENT NOW
+      </button>
+
+    </div>
+  </div>
+)}
     </section>
   );
 };

@@ -849,7 +849,7 @@ function Registration() {
 
               <label className="cp-field">
                 <span>
-                  TEAM / CREW CODENAME (OPTIONAL)
+                  TEAM / CREW CODENAME
                 </span>
 
                 <input
