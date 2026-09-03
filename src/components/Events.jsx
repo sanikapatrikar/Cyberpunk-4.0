@@ -71,7 +71,7 @@ const eventsData = [
     image: '/assets/campus-rush.jpeg',
     date: '10 SEPT 2026 // TIME TBA',
     venue: 'College Campus / Open Area',
-    fee: '₹80-₹140 per team',
+    fee: '₹100-₹140 per team',
     prize: 'Rs. 1,500 prize pool',
     team: '2-3 Members',
     fullDesc: 'Get ready for Campus Rush, a high-energy battle of speed, teamwork, strategy, and presence of mind! Race through a campus-wide treasure hunt, conquer a series of physical and mental challenges, and make it to the ultimate blindfolded RC-car finale. Only the fastest and smartest team will survive the rush.',
