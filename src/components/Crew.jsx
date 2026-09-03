@@ -68,6 +68,21 @@ const crewMembers = [
       instagram: 'https://www.instagram.com/tejas_dongre_09?igsi=MTY4cHJ6NTFkbms4bg==' 
     },
   },
+  {
+    name: 'VEDANT SAYARE',
+    role: 'Mentor',
+    
+    image: '/assets/VedantS.jpg',
+    
+
+    socials: { linkedin: '#', insta: '#',  },
+
+    socials: { 
+      linkedin: 'https://www.linkedin.com/in/vedantsayare/', 
+      instagram: 'https://www.instagram.com/sayare_vedant?igsi=MTBpa3llaW84bTJvNA==' 
+    },
+
+  },
   
 ];
 
