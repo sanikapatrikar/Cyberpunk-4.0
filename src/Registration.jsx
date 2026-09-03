@@ -36,7 +36,7 @@ const EVENT_FEES = {
   HEIST: { 1: 50, 2: 80, 3: 130, 4: 160 },
   DETECTYX: { 1: 50, 2: 80, 3: 120 },
   WEB3: { 3: 240, 4: 240, 5: 240 },
-  NGV: { 2: 80, 3: 140 },
+  NGV: { 2: 100, 3: 140 },
 };
 
 const getRegistrationAmount = (eventKey, teamSizeConfig) => {
