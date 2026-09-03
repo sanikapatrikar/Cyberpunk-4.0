@@ -25,10 +25,34 @@ const EVENT_ICONS = {
 };
 
 const EVENT_TEAM_RULES = {
-  HEIST: { min: 2, max: 4 },
-  DETECTYX: { min: 2, max: 4 },
+  HEIST: { min: 1, max: 4 },
+  DETECTYX: { min: 1, max: 3 },
   WEB3: { min: 3, max: 5 },
   NGV: { min: 2, max: 3 },
+};
+
+// UPDATED EVENT FEES — based on the latest registration fee sheet.
+const EVENT_FEES = {
+  HEIST: { 1: 50, 2: 80, 3: 130, 4: 160 },
+  DETECTYX: { 1: 50, 2: 80, 3: 120 },
+  WEB3: { 3: 240, 4: 240, 5: 240 },
+  NGV: { 2: 80, 3: 140 },
+};
+
+const getRegistrationAmount = (eventKey, teamSizeConfig) => {
+  const count = Number(teamSizeConfig?.count);
+  return EVENT_FEES[eventKey]?.[count] ?? null;
+};
+
+const getEventFeeDisplay = (eventKey) => {
+  const fees = EVENT_FEES[eventKey];
+  if (!fees) return "-";
+
+  const values = Object.values(fees);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+
+  return min === max ? `₹${min} / TEAM` : `₹${min}–₹${max} / TEAM`;
 };
 
 const getAvailableTeamSizes = (eventKey) => {
@@ -170,10 +194,22 @@ function Registration() {
     [selectedEvent]
   );
 
-  // SINGLE SOURCE OF TRUTH: Price is determined exclusively by selected event
+  // SINGLE SOURCE OF TRUTH: Price is determined by selected event + team size.
+  // Before a team size is selected, do not fall back to an old/default price.
   const amount = useMemo(
-    () => getEventPrice(selectedEvent),
-    [selectedEvent]
+    () =>
+      selectedTeamSize
+        ? getRegistrationAmount(selectedEvent, teamConfig)
+        : null,
+    [selectedEvent, selectedTeamSize, teamConfig]
+  );
+
+  const amountDisplay = useMemo(
+    () =>
+      amount !== null
+        ? `₹${amount} / TEAM`
+        : getEventFeeDisplay(selectedEvent),
+    [amount, selectedEvent]
   );
 
   const participantCount = teamConfig?.count ?? 0;
@@ -776,7 +812,7 @@ function Registration() {
                     </small>
 
                     <div className="cp-event-card-fee">
-                      ENTRY FEE: <strong>₹{event.price}</strong> / TEAM
+                      ENTRY FEE: <strong>{getEventFeeDisplay(key)}</strong>
                     </div>
                   </button>
                 );
@@ -823,7 +859,7 @@ function Registration() {
               </div>
               <div className="cp-dossier-meta-item">
                 <span>TOTAL ENTRY FEE</span>
-                <strong className="cp-fee-highlight">₹{amount} / TEAM</strong>
+                <strong className="cp-fee-highlight">{amountDisplay}</strong>
               </div>
             </div>
 
