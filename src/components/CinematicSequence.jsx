@@ -14,9 +14,14 @@ const CinematicSequence = ({ onSequenceComplete }) => {
   const crewRef = useRef(null);
   const titleRevealRef = useRef(null);
   const landingHeroRef = useRef(null);
+  
   const [scrollProgress, setScrollProgress] = useState(0);
   const [goldSheenX, setGoldSheenX] = useState(null);
+  
+  // NEW: State for the 3D logo hover effect
+  const [transformStyle, setTransformStyle] = useState('');
 
+  // Existing Gold Sheen tracker (runs on the whole screen)
   const handleHeroMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     if (!rect.width) return;
@@ -26,6 +31,24 @@ const CinematicSequence = ({ onSequenceComplete }) => {
 
   const handleHeroMouseLeave = () => {
     setGoldSheenX(null);
+  };
+
+  // NEW: 3D Hover tracker (runs only when hovering the logo)
+  const handleLogoMouseMove = (e) => {
+    const card = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - card.left) / card.width;
+    const y = (e.clientY - card.top) / card.height;
+    
+    const rotateX = (0.5 - y) * 30; // Max tilt degrees
+    const rotateY = (x - 0.5) * 30;
+    
+    setTransformStyle(
+      `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05) translateY(-5px)`
+    );
+  };
+
+  const handleLogoMouseLeave = () => {
+    setTransformStyle('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateY(0px)');
   };
 
   useEffect(() => {
@@ -142,7 +165,6 @@ const CinematicSequence = ({ onSequenceComplete }) => {
       }, 0);
 
       // Phase 2: 360° Mask Rotation (0.15 to 0.50)
-      // 0% -> 0deg, 25% -> 90deg, 50% -> 180deg, 75% -> 270deg, 100% -> 360deg
       tl.to(currentAngleRef, {
         current: 360,
         duration: 0.35,
@@ -176,7 +198,6 @@ const CinematicSequence = ({ onSequenceComplete }) => {
       tl.to(gateRightRef.current, { xPercent: 100, duration: 0.18, ease: 'power1.inOut' }, 0.60);
 
       // Phase 5: Crew Reveal behind gate (0.65 to 0.85)
-      // Progressive reveal: Silhouette -> Body -> Clothing -> Mask -> Full Crew
       tl.fromTo(
         crewRef.current,
         { opacity: 0, filter: 'blur(15px) brightness(0.1)', scale: 0.9 },
@@ -230,64 +251,61 @@ const CinematicSequence = ({ onSequenceComplete }) => {
       />
 
       {/* Scene 04 & 05: Industrial Vault Gate Doors */}
-<div className="absolute inset-0 z-30 pointer-events-none flex overflow-hidden">
+      <div className="absolute inset-0 z-30 pointer-events-none flex overflow-hidden">
+        {/* LEFT VAULT DOOR */}
+        <div
+          ref={gateLeftRef}
+          className="
+            relative w-1/2 h-full overflow-hidden
+            border-r-2 border-red-600/50
+            shadow-2xl opacity-0
+          "
+          style={{
+            backgroundImage: "url('/assets/heist_vault_gate.jpg')",
+            backgroundSize: "200% 100%",
+            backgroundPosition: "left center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-red-950/40" />
 
-  {/* LEFT VAULT DOOR */}
-  <div
-    ref={gateLeftRef}
-    className="
-      relative w-1/2 h-full overflow-hidden
-      border-r-2 border-red-600/50
-      shadow-2xl opacity-0
-    "
-    style={{
-      backgroundImage: "url('/assets/heist_vault_gate.jpg')",
-      backgroundSize: "200% 100%",
-      backgroundPosition: "left center",
-      backgroundRepeat: "no-repeat",
-    }}
-  >
-    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-red-950/40" />
+          <div className="
+            absolute right-3 sm:right-4
+            top-1/2 -translate-y-1/2
+            flex flex-col gap-3
+          ">
+            <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" />
+            <span className="w-2 h-16 bg-red-600/80 rounded" />
+          </div>
+        </div>
 
-    <div className="
-      absolute right-3 sm:right-4
-      top-1/2 -translate-y-1/2
-      flex flex-col gap-3
-    ">
-      <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" />
-      <span className="w-2 h-16 bg-red-600/80 rounded" />
-    </div>
-  </div>
+        {/* RIGHT VAULT DOOR */}
+        <div
+          ref={gateRightRef}
+          className="
+            relative w-1/2 h-full overflow-hidden
+            border-l-2 border-red-600/50
+            shadow-2xl opacity-0
+          "
+          style={{
+            backgroundImage: "url('/assets/heist_vault_gate.jpg')",
+            backgroundSize: "200% 100%",
+            backgroundPosition: "right center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-transparent to-red-950/40" />
 
-
-  {/* RIGHT VAULT DOOR */}
-  <div
-    ref={gateRightRef}
-    className="
-      relative w-1/2 h-full overflow-hidden
-      border-l-2 border-red-600/50
-      shadow-2xl opacity-0
-    "
-    style={{
-      backgroundImage: "url('/assets/heist_vault_gate.jpg')",
-      backgroundSize: "200% 100%",
-      backgroundPosition: "right center",
-      backgroundRepeat: "no-repeat",
-    }}
-  >
-    <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-transparent to-red-950/40" />
-
-    <div className="
-      absolute left-3 sm:left-4
-      top-1/2 -translate-y-1/2
-      flex flex-col gap-3
-    ">
-      <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" />
-      <span className="w-2 h-16 bg-red-600/80 rounded" />
-    </div>
-  </div>
-
-</div>
+          <div className="
+            absolute left-3 sm:left-4
+            top-1/2 -translate-y-1/2
+            flex flex-col gap-3
+          ">
+            <span className="w-2 h-2 bg-red-600 rounded-full animate-ping" />
+            <span className="w-2 h-16 bg-red-600/80 rounded" />
+          </div>
+        </div>
+      </div>
 
       {/* Scene 06: Heist Crew Reveal Layer */}
       <div
@@ -310,28 +328,19 @@ const CinematicSequence = ({ onSequenceComplete }) => {
         onMouseLeave={handleHeroMouseLeave}
         className="absolute inset-0 z-50 flex flex-col items-center justify-center text-center px-4 pointer-events-auto cursor-pointer select-none"
       >
-        {/* Large Event Logo: CYBER | PUNK */}
-        <div className="flex items-center justify-center gap-1 sm:gap-2 md:gap-3 mb-3 sm:mb-4 relative">
-          <span
-            className="font-compacta text-[clamp(3.5rem,10vw,8.5rem)] tracking-wider uppercase leading-none font-bold drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]"
-            style={
-              goldSheenX !== null
-                ? {
-                    backgroundImage: `linear-gradient(90deg, #ffffff 0%, #ffffff ${Math.max(0, goldSheenX - 25)}%, #ffd700 ${Math.max(0, goldSheenX - 8)}%, #fff9b8 ${goldSheenX}%, #d4af37 ${Math.min(100, goldSheenX + 8)}%, #ffffff ${Math.min(100, goldSheenX + 25)}%, #ffffff 100%)`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                  }
-                : { color: '#ffffff' }
-            }
-          >
-            CYBER
-          </span>
-          
-          <div className="w-[4px] sm:w-[6px] md:w-[8px] h-[clamp(2.5rem,7.5vw,6.5rem)] bg-red-600 rounded-sm relative -top-[2px] sm:-top-[4px]" />
-
-          <div className="bg-red-600 px-3 sm:px-6 md:px-8 py-0.5 sm:py-1 rounded-sm shadow-[0_0_35px_rgba(230,0,0,0.7)] border border-red-500 flex items-center justify-center">
+        {/* NEW: 3D Float Wrapper applied specifically to the logo and date */}
+        <div
+          onMouseMove={handleLogoMouseMove}
+          onMouseLeave={handleLogoMouseLeave}
+          className="transition-transform duration-200 ease-out flex flex-col items-center justify-center p-8"
+          style={{ 
+            transform: transformStyle || 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateY(0px)' 
+          }}
+        >
+          {/* Large Event Logo: CYBER | PUNK */}
+          <div className="flex items-center justify-center gap-1 sm:gap-2 md:gap-3 mb-3 sm:mb-4 relative">
             <span
-              className="font-compacta text-[clamp(3.5rem,10vw,8.5rem)] tracking-wider uppercase leading-none font-bold"
+              className="font-compacta text-[clamp(3.5rem,10vw,8.5rem)] tracking-wider uppercase leading-none font-bold drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)]"
               style={
                 goldSheenX !== null
                   ? {
@@ -342,18 +351,37 @@ const CinematicSequence = ({ onSequenceComplete }) => {
                   : { color: '#ffffff' }
               }
             >
-              PUNK
+              CYBER
             </span>
-          </div>
-        </div>
+            
+            <div className="w-[4px] sm:w-[6px] md:w-[8px] h-[clamp(2.5rem,7.5vw,6.5rem)] bg-red-600 rounded-sm relative -top-[2px] sm:-top-[4px]" />
 
-        {/* Subtitle Date: 10 SEPTEMBER */}
-        <div className="flex items-center justify-center gap-3 sm:gap-4">
-          <div className="h-[2px] w-8 sm:w-16 md:w-24 bg-gradient-to-r from-transparent to-red-600" />
-          <p className="font-compacta text-[clamp(1.2rem,3.5vw,2.5rem)] text-red-600 tracking-[0.25em] sm:tracking-[0.35em] font-bold uppercase leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
-            10 SEPTEMBER
-          </p>
-          <div className="h-[2px] w-8 sm:w-16 md:w-24 bg-gradient-to-l from-transparent to-red-600" />
+            <div className="bg-red-600 px-3 sm:px-6 md:px-8 py-0.5 sm:py-1 rounded-sm shadow-[0_0_35px_rgba(230,0,0,0.7)] border border-red-500 flex items-center justify-center">
+              <span
+                className="font-compacta text-[clamp(3.5rem,10vw,8.5rem)] tracking-wider uppercase leading-none font-bold"
+                style={
+                  goldSheenX !== null
+                    ? {
+                        backgroundImage: `linear-gradient(90deg, #ffffff 0%, #ffffff ${Math.max(0, goldSheenX - 25)}%, #ffd700 ${Math.max(0, goldSheenX - 8)}%, #fff9b8 ${goldSheenX}%, #d4af37 ${Math.min(100, goldSheenX + 8)}%, #ffffff ${Math.min(100, goldSheenX + 25)}%, #ffffff 100%)`,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                      }
+                    : { color: '#ffffff' }
+                }
+              >
+                PUNK
+              </span>
+            </div>
+          </div>
+
+          {/* Subtitle Date: 10 SEPTEMBER */}
+          <div className="flex items-center justify-center gap-3 sm:gap-4">
+            <div className="h-[2px] w-8 sm:w-16 md:w-24 bg-gradient-to-r from-transparent to-red-600" />
+            <p className="font-compacta text-[clamp(1.2rem,3.5vw,2.5rem)] text-red-600 tracking-[0.25em] sm:tracking-[0.35em] font-bold uppercase leading-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)]">
+              10 SEPTEMBER
+            </p>
+            <div className="h-[2px] w-8 sm:w-16 md:w-24 bg-gradient-to-l from-transparent to-red-600" />
+          </div>
         </div>
       </div>
 
@@ -362,10 +390,8 @@ const CinematicSequence = ({ onSequenceComplete }) => {
         ref={titleRevealRef}
         className="absolute inset-0 z-40 flex flex-col items-center justify-center text-center px-4 opacity-0 pointer-events-auto"
       >
-        {/* Reused Single Source of Truth Countdown */}
         <Countdown isEmbedded={true} />
 
-        {/* Enter Operation Button */}
         <button
           onClick={scrollToMain}
           className="group relative inline-flex items-center justify-center px-8 sm:px-12 py-4 bg-red-600 hover:bg-red-700 text-white font-compacta text-2xl sm:text-3xl tracking-widest rounded-none border border-red-500 shadow-[0_0_30px_rgba(230,0,0,0.6)] transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer"
