@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { Terminal, Fingerprint, Cpu, Zap, ArrowRight, ArrowLeft } from "lucide-react";
 import "./Registration.css";
 import { playHeistClickSound } from "./utils/audio";
@@ -153,6 +153,13 @@ function Registration() {
   const [form, setForm] = useState(createEmptyForm());
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // Cache the screenshot Base64 as soon as the user selects the file.
+  // This keeps the final "CONFIRM REGISTRATION" click from waiting for FileReader.
+  const screenshotCacheRef = useRef({
+    file: null,
+    base64: null,
+  });
 
   // Cinematic terminal initialization states
   const [isInitializing, setIsInitializing] = useState(true);
@@ -515,10 +522,16 @@ function Registration() {
         throw new Error(participantError);
       }
 
-      /* Convert screenshot */
+      /* Use the screenshot that was prepared when the file was selected.
+         Fallback to FileReader only if the cache is unavailable/stale. */
+      let screenshotBase64 = screenshotCacheRef.current.base64;
 
-      const screenshotBase64 =
-        await toBase64(form.paymentScreenshot);
+      if (
+        screenshotCacheRef.current.file !== form.paymentScreenshot ||
+        !screenshotBase64
+      ) {
+        screenshotBase64 = await toBase64(form.paymentScreenshot);
+      }
 
       /* --------------------------------
         CLEAN PARTICIPANT DATA (Only active operatives)
@@ -624,6 +637,11 @@ function Registration() {
     setSelectedTeamSize("");
     setForm(createEmptyForm());
     setError("");
+
+    screenshotCacheRef.current = {
+      file: null,
+      base64: null,
+    };
 
     window.scrollTo({
       top: 0,
@@ -1156,6 +1174,10 @@ function Registration() {
                         null;
 
                       if (!file) {
+                        screenshotCacheRef.current = {
+                          file: null,
+                          base64: null,
+                        };
                         updateForm(
                           "paymentScreenshot",
                           null
@@ -1173,11 +1195,40 @@ function Registration() {
                           "Payment screenshot must be smaller than 5 MB."
                         );
 
+                        screenshotCacheRef.current = {
+                          file: null,
+                          base64: null,
+                        };
                         e.target.value = "";
                         return;
                       }
 
                       setError("");
+
+                      // Start reading the file immediately instead of waiting
+                      // until the final confirmation button is clicked.
+                      screenshotCacheRef.current = {
+                        file,
+                        base64: null,
+                      };
+
+                      const cacheFile = file;
+                      toBase64(file)
+                        .then((base64) => {
+                          // Ignore an old read if the user selected another file.
+                          if (screenshotCacheRef.current.file === cacheFile) {
+                            screenshotCacheRef.current.base64 = base64;
+                          }
+                        })
+                        .catch((err) => {
+                          if (screenshotCacheRef.current.file === cacheFile) {
+                            screenshotCacheRef.current = {
+                              file: cacheFile,
+                              base64: null,
+                            };
+                            console.error("Screenshot preparation error:", err);
+                          }
+                        });
 
                       updateForm(
                         "paymentScreenshot",
