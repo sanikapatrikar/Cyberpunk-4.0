@@ -90,7 +90,7 @@ const CinematicSequence = ({ onSequenceComplete }) => {
 
     const maskImg = new Image();
 
-    maskImg.src = '/assets/heist_dali_mask.jpg';
+    maskImg.src = '/assets/heist_dali_mask.webp';
 
     let maskLoaded = false;
 
@@ -857,7 +857,7 @@ const CinematicSequence = ({ onSequenceComplete }) => {
           "
           style={{
             backgroundImage:
-              "url('/assets/heist_vault_gate.jpg')",
+              "url('/assets/heist_vault_gate.webp')",
 
             backgroundSize:
               '200% 100%',
@@ -930,7 +930,7 @@ const CinematicSequence = ({ onSequenceComplete }) => {
           "
           style={{
             backgroundImage:
-              "url('/assets/heist_vault_gate.jpg')",
+              "url('/assets/heist_vault_gate.webp')",
 
             backgroundSize:
               '200% 100%',
@@ -1007,7 +1007,7 @@ const CinematicSequence = ({ onSequenceComplete }) => {
       >
 
         <img
-          src="/assets/heist_crew_reveal.jpg"
+          src="/assets/heist_crew_reveal.webp"
           alt="CYBERPUNK Heist Crew"
           className="
             w-full

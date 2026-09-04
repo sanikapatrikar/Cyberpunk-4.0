@@ -9,7 +9,7 @@ const eventsData = [
     category: 'CTF Event',
     icon: Terminal,
     // Fixed extension to .png based on your terminal
-    image: '/assets/hacker-heist.png',
+    image: '/assets/hacker-heist.webp',
     date: '10 SEPT 2026 // TIME TBA',
     venue: 'BS-14',
     fee: '₹50-₹160 per team',
@@ -28,7 +28,7 @@ const eventsData = [
     category: 'Hackathon',
     icon: Cpu,
     // Fixed extension to .jpeg
-    image: '/assets/web3--.jpeg',
+    image: '/assets/web3--.webp',
     date: '10 SEPT 2026 // 6-HOUR CHALLENGE',
     venue: 'to be decided',
     fee: '₹ 240 per team',
@@ -48,7 +48,7 @@ const eventsData = [
     category: 'Coding & Hacking',
     icon: Shield,
     // Fixed extension to .jpeg
-    image: '/assets/detectyx--.jpeg',
+    image: '/assets/detectyx--.webp',
     date: '10 SEPT 2026 // TIME TBA',
     venue: 'BS-08 / BS-09',
     fee: '₹ 50-₹120 per team',
@@ -68,7 +68,7 @@ const eventsData = [
     category: 'Fun & Games',
     icon: Zap,
     // Fixed extension to .jpeg
-    image: '/assets/campus-rush.jpeg',
+    image: '/assets/campus-rush.webp',
     date: '10 SEPT 2026 // TIME TBA',
     venue: 'College Campus / Open Area',
     fee: '₹100-₹140 per team',

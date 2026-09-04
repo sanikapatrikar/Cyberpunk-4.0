@@ -9,7 +9,7 @@ const crewMembers = [
     name: 'VEDANT GHUBADE',
     role: 'Mentor',
     
-    image: '/assets/vedant.jpg', 
+    image: '/assets/vedant.webp', 
     
     socials: { 
       linkedin: 'https://www.linkedin.com/in/vedant-ghubade-96b734273?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
@@ -17,21 +17,11 @@ const crewMembers = [
     },
 
   },
-  {
-    name: 'WANSH KUMBHALKAR',
-    role: 'Mentor',
-    image: '/assets/wansh.jpg',
-    
-    socials: { 
-      linkedin: 'https://www.linkedin.com/in/wansh-kumbhalkar-85b97b280?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
-      instagram: 'https://www.instagram.com/wansh_kumbhalkar?igsi=MWIyMjY5Mjg1MG5zcw==' 
-    },
-  },
-  {
+   {
     name: 'ANSHUL VAIRAGADE',
     role: 'Mentor',
     
-    image: '/assets/anshul.jpg',
+    image: '/assets/anshul.webp',
     
 
     socials: { linkedin: '#', insta: '#',  },
@@ -43,10 +33,21 @@ const crewMembers = [
 
   },
   {
+    name: 'WANSH KUMBHALKAR',
+    role: 'Mentor',
+    image: '/assets/wansh.webp',
+    
+    socials: { 
+      linkedin: 'https://www.linkedin.com/in/wansh-kumbhalkar-85b97b280?utm_source=share_via&utm_content=profile&utm_medium=member_android', 
+      instagram: 'https://www.instagram.com/wansh_kumbhalkar?igsi=MWIyMjY5Mjg1MG5zcw==' 
+    },
+  },
+ 
+  {
     name: 'TANUSH BAMNOTE',
     role: 'Mentor',
     
-    image: '/assets/tanush.jpg',
+    image: '/assets/tanush.webp',
 
     socials: { linkedin: '#', insta: '#',  },
 
@@ -59,7 +60,7 @@ const crewMembers = [
     name: 'TEJAS DONGRE',
     role: 'Mentor',
     
-    image: '/assets/tejas.jpg',
+    image: '/assets/tejas.webp',
 
     socials: { linkedin: '#', insta: '#',  },
 
@@ -72,7 +73,7 @@ const crewMembers = [
     name: 'VEDANT SAYARE',
     role: 'Mentor',
     
-    image: '/assets/VedantS.jpg',
+    image: '/assets/VedantS.webp',
     
 
     socials: { linkedin: '#', insta: '#',  },
@@ -96,7 +97,7 @@ const coreCrewMembers = [
   {
     name: 'Aditya Jadhav',
     role: 'Coordinator',
-    image: '/core_team_images/Aditya Jadhav (Coordinator).png',
+    image: '/core_team_images/Aditya Jadhav (Coordinator).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/aditya-jadhav-b7463030b',
       instagram: 'https://www.instagram.com/aditya_jadhav15',
@@ -106,7 +107,7 @@ const coreCrewMembers = [
   {
     name: 'Sana Sheware',
     role: 'Co-Coordinator',
-    image: '/core_team_images/Sana Sheware (Co-Coordinator).png',
+    image: '/core_team_images/Sana Sheware (Co-Coordinator).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/sana-sheware-4561ba332',
       instagram: 'https://www.instagram.com/sana_r_sheware',
@@ -116,7 +117,7 @@ const coreCrewMembers = [
   {
     name: 'Ketan Mahant',
     role: 'Co-Coordinator',
-    image: '/core_team_images/Ketan Mahant (Co-Coordinator).png',
+    image: '/core_team_images/Ketan Mahant (Co-Coordinator).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/ketan-mahant-50a029386/',
       instagram: 'https://www.instagram.com/ketan_mahant/',
@@ -126,7 +127,7 @@ const coreCrewMembers = [
   {
     name: 'Sanika Patrikar',
     role: 'Technical Head',
-    image: '/core_team_images/Sanika Patrikar (Technical Head).png',
+    image: '/core_team_images/Sanika Patrikar (Technical Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/sanika-patrikar-4a3456331',
       instagram: 'https://www.instagram.com/patrikar.sanikaa',
@@ -136,7 +137,7 @@ const coreCrewMembers = [
   {
     name: 'Ved Korde',
     role: 'Technical Co-Head',
-    image: '/core_team_images/Ved Korde (Technical Co-Head).png',
+    image: '/core_team_images/Ved Korde (Technical Co-Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/vedkorde19',
       instagram: 'https://www.instagram.com/ved_korde',
@@ -146,7 +147,7 @@ const coreCrewMembers = [
   {
     name: 'Harsha Rokade',
     role: 'Finance Head',
-    image: '/core_team_images/Harsha Rokade (Finance Head).png',
+    image: '/core_team_images/Harsha Rokade (Finance Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/harsha-rokade-41b477339',
       instagram: 'https://www.instagram.com/harshaa_rokade',
@@ -156,7 +157,7 @@ const coreCrewMembers = [
   {
     name: 'Harshada Thakre',
     role: 'Registration Head',
-    image: '/core_team_images/Harshada Thakre (Registration Head).png',
+    image: '/core_team_images/Harshada Thakre (Registration Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/harshada-thakre-8b4273322',
       instagram: 'https://www.instagram.com/ha_rshada016',
@@ -166,7 +167,7 @@ const coreCrewMembers = [
   {
     name: 'Lokeshni Burde',
     role: 'Registration Co-Head',
-    image: '/core_team_images/Lokeshni Burde (Registration Co_Head).png',
+    image: '/core_team_images/Lokeshni Burde (Registration Co_Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/lokeshni-burde-33a6792b4',
       instagram: 'https://www.instagram.com/_lokeshni.burde_',
@@ -175,7 +176,7 @@ const coreCrewMembers = [
   {
     name: 'Vidhi Ayalwar',
     role: 'Documentation Head',
-    image: '/core_team_images/Vidhi Ayalwar (Documentation Head).jpeg',
+    image: '/core_team_images/Vidhi Ayalwar (Documentation Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/vidhi-ayalwar-491470330',
       instagram: 'https://www.instagram.com/vidhi_2803',
@@ -185,7 +186,7 @@ const coreCrewMembers = [
   {
     name: 'Ayush Malvi',
     role: 'Management Head',
-    image: '/core_team_images/Ayush Malvi (Management Head).png',
+    image: '/core_team_images/Ayush Malvi (Management Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/ayush-malvi-54647636a',
       instagram: 'https://www.instagram.com/ayushhm_01',
@@ -195,7 +196,7 @@ const coreCrewMembers = [
   {
     name: 'Anushka Waldekar',
     role: 'Media Head',
-    image: '/core_team_images/Anushka Waldekar (Media Head).png',
+    image: '/core_team_images/Anushka Waldekar (Media Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/anushka-waldekar-036a8a399',
       instagram: 'https://www.instagram.com/_anu.shkaaa',
@@ -205,7 +206,7 @@ const coreCrewMembers = [
   {
     name: 'Trishti More',
     role: 'Promotion Head',
-    image: '/core_team_images/Trishti More (Promotion Head).png',
+    image: '/core_team_images/Trishti More (Promotion Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/trishti-more-50a483331',
       instagram: 'https://www.instagram.com/thatthickchick.__',
@@ -215,7 +216,7 @@ const coreCrewMembers = [
   {
     name: 'Jagruti Chore',
     role: 'Promotion Co-Head',
-    image: '/core_team_images/Jagruti Chore (Promotion Co-Head).png',
+    image: '/core_team_images/Jagruti Chore (Promotion Co-Head).webp',
     socials: {
       linkedin: 'https://www.linkedin.com/in/jagruti-chore-895839360/',
       instagram: 'https://www.instagram.com/jagrutiiiii25/',
