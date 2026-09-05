@@ -46,7 +46,6 @@ function getAuth() {
   if (!cachedAuth) {
     let privateKey = requiredEnv("GOOGLE_PRIVATE_KEY").trim();
 
-    // Remove accidental quotes
     if (
       (privateKey.startsWith('"') && privateKey.endsWith('"')) ||
       (privateKey.startsWith("'") && privateKey.endsWith("'"))
@@ -54,11 +53,16 @@ function getAuth() {
       privateKey = privateKey.slice(1, -1);
     }
 
-    // Convert escaped \n into actual new lines
     privateKey = privateKey
       .replace(/\\n/g, "\n")
       .replace(/\r/g, "")
       .trim();
+
+    if (privateKey.startsWith("GOOGLE_PRIVATE_KEY=")) {
+      privateKey = privateKey
+        .replace(/^GOOGLE_PRIVATE_KEY=/, "")
+        .trim();
+    }
 
     cachedAuth = new google.auth.GoogleAuth({
       credentials: {
