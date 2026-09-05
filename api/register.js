@@ -44,10 +44,26 @@ function requiredEnv(name) {
 
 function getAuth() {
   if (!cachedAuth) {
+    let privateKey = requiredEnv("GOOGLE_PRIVATE_KEY").trim();
+
+    // Remove accidental quotes
+    if (
+      (privateKey.startsWith('"') && privateKey.endsWith('"')) ||
+      (privateKey.startsWith("'") && privateKey.endsWith("'"))
+    ) {
+      privateKey = privateKey.slice(1, -1);
+    }
+
+    // Convert escaped \n into actual new lines
+    privateKey = privateKey
+      .replace(/\\n/g, "\n")
+      .replace(/\r/g, "")
+      .trim();
+
     cachedAuth = new google.auth.GoogleAuth({
       credentials: {
-        client_email: requiredEnv("GOOGLE_CLIENT_EMAIL"),
-        private_key: requiredEnv("GOOGLE_PRIVATE_KEY").replace(/\\n/g, "\n"),
+        client_email: requiredEnv("GOOGLE_CLIENT_EMAIL").trim(),
+        private_key: privateKey,
       },
       scopes: [
         "https://www.googleapis.com/auth/spreadsheets",
@@ -55,6 +71,7 @@ function getAuth() {
       ],
     });
   }
+
   return cachedAuth;
 }
 
