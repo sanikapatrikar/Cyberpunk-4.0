@@ -159,6 +159,9 @@ function Registration() {
   const screenshotCacheRef = useRef({
     file: null,
     base64: null,
+    mimeType: null,
+    fileName: null,
+    preparing: null,
   });
 
   // Cinematic terminal initialization states
@@ -443,32 +446,103 @@ function Registration() {
     FILE → BASE64
   -------------------------------- */
 
-  const toBase64 = (file) =>
+  /* --------------------------------
+    OPTIMIZE PAYMENT SCREENSHOT
+    - Images are resized/compressed before upload.
+    - PDFs are sent as-is.
+    - This dramatically reduces the Google Apps Script payload.
+  -------------------------------- */
+  const prepareScreenshot = (file) =>
     new Promise((resolve, reject) => {
       if (!file) {
         reject(new Error("Payment screenshot is missing."));
         return;
       }
 
-      const reader = new FileReader();
+      // Keep PDFs untouched because they cannot be compressed with canvas.
+      if (file.type === "application/pdf") {
+        const reader = new FileReader();
 
-      reader.onload = () => {
-        const result = String(reader.result);
+        reader.onload = () => {
+          const result = String(reader.result);
+          resolve({
+            base64: result.includes(",") ? result.split(",")[1] : result,
+            mimeType: file.type,
+            fileName: file.name,
+          });
+        };
 
-        const base64 = result.includes(",")
-          ? result.split(",")[1]
-          : result;
+        reader.onerror = () =>
+          reject(new Error("Unable to read payment screenshot."));
 
-        resolve(base64);
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      const image = new Image();
+      const objectUrl = URL.createObjectURL(file);
+
+      image.onload = () => {
+        try {
+          const MAX_SIZE = 1280;
+          const scale = Math.min(1, MAX_SIZE / Math.max(image.width, image.height));
+          const width = Math.max(1, Math.round(image.width * scale));
+          const height = Math.max(1, Math.round(image.height * scale));
+
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext("2d", { alpha: false });
+          if (!ctx) {
+            throw new Error("Unable to prepare payment screenshot.");
+          }
+
+          ctx.drawImage(image, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                URL.revokeObjectURL(objectUrl);
+                reject(new Error("Unable to compress payment screenshot."));
+                return;
+              }
+
+              const reader = new FileReader();
+
+              reader.onload = () => {
+                URL.revokeObjectURL(objectUrl);
+                const result = String(reader.result);
+
+                resolve({
+                  base64: result.includes(",") ? result.split(",")[1] : result,
+                  mimeType: "image/jpeg",
+                  fileName: `${file.name.replace(/\.[^/.]+$/, "")}.jpg`,
+                });
+              };
+
+              reader.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                reject(new Error("Unable to read compressed payment screenshot."));
+              };
+
+              reader.readAsDataURL(blob);
+            },
+            "image/jpeg",
+            0.72
+          );
+        } catch (error) {
+          URL.revokeObjectURL(objectUrl);
+          reject(error);
+        }
       };
 
-      reader.onerror = () => {
-        reject(
-          new Error("Unable to read payment screenshot.")
-        );
+      image.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Unable to process payment screenshot."));
       };
 
-      reader.readAsDataURL(file);
+      image.src = objectUrl;
     });
 
   /* --------------------------------
@@ -522,16 +596,26 @@ function Registration() {
         throw new Error(participantError);
       }
 
-      /* Use the screenshot that was prepared when the file was selected.
-         Fallback to FileReader only if the cache is unavailable/stale. */
-      let screenshotBase64 = screenshotCacheRef.current.base64;
-
-      if (
-        screenshotCacheRef.current.file !== form.paymentScreenshot ||
-        !screenshotBase64
-      ) {
-        screenshotBase64 = await toBase64(form.paymentScreenshot);
+      /* Use the optimized screenshot prepared during file selection.
+         If compression is still running, wait only for that operation. */
+      if (screenshotCacheRef.current.file !== form.paymentScreenshot) {
+        screenshotCacheRef.current = {
+          file: form.paymentScreenshot,
+          base64: null,
+          mimeType: null,
+          fileName: null,
+          preparing: prepareScreenshot(form.paymentScreenshot),
+        };
       }
+
+      if (!screenshotCacheRef.current.base64) {
+        const prepared = await screenshotCacheRef.current.preparing;
+        screenshotCacheRef.current.base64 = prepared.base64;
+        screenshotCacheRef.current.mimeType = prepared.mimeType;
+        screenshotCacheRef.current.fileName = prepared.fileName;
+      }
+
+      const screenshotBase64 = screenshotCacheRef.current.base64;
 
       /* --------------------------------
         CLEAN PARTICIPANT DATA (Only active operatives)
@@ -568,17 +652,12 @@ function Registration() {
           form.transactionId.trim(),
         screenshotBase64,
         screenshotFileName:
-          form.paymentScreenshot.name,
+          screenshotCacheRef.current.fileName || form.paymentScreenshot.name,
         screenshotMimeType:
-          form.paymentScreenshot.type,
+          screenshotCacheRef.current.mimeType || form.paymentScreenshot.type,
         timestamp:
           new Date().toISOString(),
       };
-
-      console.log(
-        "Sending registration:",
-        payload
-      );
 
       /* --------------------------------
         SEND TO GOOGLE APPS SCRIPT
@@ -1207,25 +1286,32 @@ function Registration() {
 
                       // Start reading the file immediately instead of waiting
                       // until the final confirmation button is clicked.
+                      const cacheFile = file;
+                      const preparing = prepareScreenshot(file);
+
                       screenshotCacheRef.current = {
-                        file,
+                        file: cacheFile,
                         base64: null,
+                        mimeType: null,
+                        fileName: null,
+                        preparing,
                       };
 
-                      const cacheFile = file;
-                      toBase64(file)
-                        .then((base64) => {
-                          // Ignore an old read if the user selected another file.
+                      // Prepare the optimized payload immediately while the user
+                      // continues through the registration steps.
+                      preparing
+                        .then((prepared) => {
                           if (screenshotCacheRef.current.file === cacheFile) {
-                            screenshotCacheRef.current.base64 = base64;
+                            screenshotCacheRef.current.base64 = prepared.base64;
+                            screenshotCacheRef.current.mimeType = prepared.mimeType;
+                            screenshotCacheRef.current.fileName = prepared.fileName;
                           }
                         })
                         .catch((err) => {
                           if (screenshotCacheRef.current.file === cacheFile) {
-                            screenshotCacheRef.current = {
-                              file: cacheFile,
-                              base64: null,
-                            };
+                            screenshotCacheRef.current.base64 = null;
+                            screenshotCacheRef.current.mimeType = null;
+                            screenshotCacheRef.current.fileName = null;
                             console.error("Screenshot preparation error:", err);
                           }
                         });
