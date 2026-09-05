@@ -15,7 +15,6 @@ import {
   getPaymentUpi,
 } from "./registrationData";
 
-import { GOOGLE_SCRIPT_URL } from "./googleScriptConfig";
 
 const EVENT_ICONS = {
   HEIST: Terminal,
@@ -554,17 +553,6 @@ function Registration() {
     setError("");
 
     try {
-      /* Check Google Apps Script URL */
-
-      if (
-        !GOOGLE_SCRIPT_URL ||
-        GOOGLE_SCRIPT_URL.includes("PASTE_YOUR")
-      ) {
-        throw new Error(
-          "Google Sheet is not connected. Add your deployed Google Apps Script URL in googleScriptConfig.js."
-        );
-      }
-
       /* Final validation */
 
       if (!selectedEvent) {
@@ -660,24 +648,31 @@ function Registration() {
       };
 
       /* --------------------------------
-        SEND TO GOOGLE APPS SCRIPT
+        SEND TO VERCEL REGISTRATION API
       -------------------------------- */
 
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
+      const response = await fetch("/api/register", {
         method: "POST",
         headers: {
-          "Content-Type": "text/plain;charset=utf-8",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
-
-      if (!result.success) {
-        setError(
-          result.error || "Registration failed. Please check the transaction ID."
+      let result;
+      try {
+        result = await response.json();
+      } catch {
+        throw new Error(
+          `Registration server returned an invalid response (HTTP ${response.status}).`
         );
-        return;
+      }
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result?.error ||
+            `Registration failed (HTTP ${response.status}). Please try again.`
+        );
       }
 
       /* --------------------------------
@@ -1224,7 +1219,7 @@ function Registration() {
                     onChange={(e) => {
                       const value = e.target.value
                         .replace(/[^A-Za-z0-9]/g, "")
-                        .slice(0, 12);
+                        .slice(0, 35);
 
                       setForm((prev) => ({
                         ...prev,
