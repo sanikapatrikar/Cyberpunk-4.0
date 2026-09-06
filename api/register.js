@@ -29,7 +29,7 @@ const EVENT_CODES = {
   HEIST: "HEIST",
   DETECTYX: "DETECTYX",
   WEB3: "WEB3",
-  NGV: "NGV",
+  NGV: "Campus Rush",
 };
 
 let cachedAuth;
@@ -44,30 +44,29 @@ function requiredEnv(name) {
 
 function getAuth() {
   if (!cachedAuth) {
-    let privateKey = requiredEnv("GOOGLE_PRIVATE_KEY").trim();
+    const encoded = requiredEnv("GOOGLE_SERVICE_ACCOUNT_JSON_B64").trim();
 
-    if (
-      (privateKey.startsWith('"') && privateKey.endsWith('"')) ||
-      (privateKey.startsWith("'") && privateKey.endsWith("'"))
-    ) {
-      privateKey = privateKey.slice(1, -1);
+    let credentials;
+
+    try {
+      const jsonText = Buffer.from(encoded, "base64").toString("utf8");
+      credentials = JSON.parse(jsonText);
+    } catch {
+      throw new Error(
+        "GOOGLE_SERVICE_ACCOUNT_JSON_B64 is invalid."
+      );
     }
 
-    privateKey = privateKey
-      .replace(/\\n/g, "\n")
-      .replace(/\r/g, "")
-      .trim();
-
-    if (privateKey.startsWith("GOOGLE_PRIVATE_KEY=")) {
-      privateKey = privateKey
-        .replace(/^GOOGLE_PRIVATE_KEY=/, "")
-        .trim();
+    if (!credentials.client_email || !credentials.private_key) {
+      throw new Error(
+        "Service-account JSON is missing client_email or private_key."
+      );
     }
 
     cachedAuth = new google.auth.GoogleAuth({
       credentials: {
-        client_email: requiredEnv("GOOGLE_CLIENT_EMAIL").trim(),
-        private_key: privateKey,
+        client_email: credentials.client_email,
+        private_key: credentials.private_key,
       },
       scopes: [
         "https://www.googleapis.com/auth/spreadsheets",
