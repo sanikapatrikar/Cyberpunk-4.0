@@ -3,7 +3,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import Web3ProblemStatement from "./Web3ProblemStatement";
 import SmokeCanvas from './components/SmokeCanvas';
 import CinematicSequence from './components/CinematicSequence';
 import Navbar from './components/Navbar';
@@ -125,6 +125,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/gallery" element={<GalleryPage />} />
+        <Route
+  path="/web3-problem-statement"
+  element={<Web3ProblemStatement />}
+/>
       </Routes>
     </BrowserRouter>
   );
