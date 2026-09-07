@@ -68,6 +68,13 @@ export const BRANCH_OPTIONS = [
   "Robotics & AI",
   "CSBS",
   "B.Voc",
+   "BCA",
+   "MCA",
+   "BBA",
+   "MBA",
+  "Mtech",
+ 
+
 ];
 
 export const YEAR_OPTIONS = [
