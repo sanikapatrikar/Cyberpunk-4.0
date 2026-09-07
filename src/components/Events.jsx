@@ -158,7 +158,7 @@ const Events = () => {
       'cyber-hack': 'HEIST',
       'ai-arena': 'WEB3',
       'cyber-ctf': 'DETECTYX',
-      'ui-cyberpunk': 'NGV',
+      'ui-cyberpunk': 'Rush',
     };
 
     const registrationEvent = eventMap[eventId];
