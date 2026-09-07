@@ -42,7 +42,7 @@ const eventsData = [
       '3 levels of challenges: Intermediate, Hard, and Intense.',
       'Team-based CTF competition with 2-4 members.',
       'Challenges ranging from 100 to 600 points.',
-      "No Refund Policy.",
+      'No Fees Refund Policy.',
     ],
   },
 
@@ -64,8 +64,7 @@ const eventsData = [
       'Build solutions for real-world problems.',
       'Industry mentorship and hands-on development.',
       'Final project demonstration and PPT pitch.',
-      "No Refund Policy.",
-      
+      'No Fees Refund Policy.',
     ],
   },
 
@@ -87,7 +86,7 @@ const eventsData = [
       'OSINT and crime-scene investigation.',
       'Metadata analysis and suspect interrogation.',
       'Digital forensics and hidden-data recovery.',
-      "No Refund Policy.",
+      'No Fees Refund Policy.',
     ],
   },
 
@@ -109,7 +108,7 @@ const eventsData = [
       'Challenge Arena: Cup Pyramid, Puzzle Challenge, and Balloon Burst.',
       'Guess the Word time-advantage challenge.',
       'Blindfolded RC Car Final Showdown.',
-      "No Refund Policy.",
+      'No Fees Refund Policy.',
     ],
   },
 ];
@@ -126,6 +125,7 @@ const Events = () => {
     'Hackathon',
     'Fun & Games',
   ];
+
 
   const filteredEvents =
     selectedCategory === 'All'
@@ -339,7 +339,7 @@ const Events = () => {
 
       {/* =========================================================
           EVENT MODAL
-          FIXED SCROLL VERSION
+          FIXED MOBILE + DESKTOP POSITION
       ========================================================= */}
 
       {activeModalEvent && (
@@ -353,22 +353,29 @@ const Events = () => {
             backdrop-blur-md
             overflow-y-auto
             overscroll-contain
-            px-4
-            py-6
-            sm:py-10
+            px-3
+            pt-[125px]
+            pb-5
+            sm:px-4
+            sm:pt-[100px]
+            sm:pb-8
           "
           onClick={closeModal}
           onWheel={(event) => {
-            // Keep mouse wheel inside the modal layer
             event.stopPropagation();
           }}
         >
 
-          {/* Modal wrapper */}
+          {/* =====================================================
+              MODAL WRAPPER
+
+              IMPORTANT:
+              Card starts BELOW the navbar.
+          ===================================================== */}
 
           <div
             className="
-              min-h-full
+              w-full
               flex
               items-start
               justify-center
@@ -376,7 +383,7 @@ const Events = () => {
           >
 
             {/* =====================================================
-                MODAL CONTENT
+                MODAL CARD
             ===================================================== */}
 
             <div
@@ -386,15 +393,27 @@ const Events = () => {
                 relative
                 w-full
                 max-w-2xl
+
+                max-h-[calc(100dvh-150px)]
+                sm:max-h-[calc(100dvh-120px)]
+
+                overflow-y-auto
+                overscroll-contain
+
                 bg-zinc-950
                 border
                 border-red-600/60
+
                 rounded-2xl
-                p-6
+
+                p-5
+                pt-16
+
                 sm:p-8
+                sm:pt-16
+
                 shadow-[0_0_50px_rgba(230,0,0,0.4)]
                 text-white
-                mb-6
               "
             >
 
@@ -410,29 +429,43 @@ const Events = () => {
                 }}
                 className="
                   absolute
-                  top-4
-                  right-4
+                  top-3
+                  right-3
+
+                  sm:top-4
+                  sm:right-4
+
                   z-[10000]
-                  w-10
-                  h-10
+
+                  w-11
+                  h-11
+
                   flex
                   items-center
                   justify-center
-                  text-gray-300
-                  hover:text-white
+
+                  text-white
+
                   bg-zinc-900
                   hover:bg-red-600
-                  border
-                  border-zinc-700
-                  hover:border-red-500
+
+                  border-2
+                  border-red-500
+
                   rounded-full
+
                   cursor-pointer
+
                   transition-all
                   duration-200
+
+                  shadow-[0_0_15px_rgba(230,0,0,0.7)]
+
+                  hover:scale-110
                 "
                 aria-label="Close event details"
               >
-                <X size={22} />
+                <X size={24} strokeWidth={2.5} />
               </button>
 
 
@@ -445,7 +478,9 @@ const Events = () => {
               </span>
 
 
-              {/* Title */}
+              {/* ===================================================
+                  TITLE
+              =================================================== */}
 
               <h3 className="font-bebas text-4xl sm:text-5xl tracking-wider mb-4 text-glow-red">
                 {activeModalEvent.title}
@@ -568,20 +603,28 @@ const Events = () => {
                       w-full
                       py-4
                       px-4
+
                       bg-zinc-900
                       border
                       border-red-600
+
                       hover:bg-red-600
+
                       text-white
                       font-bebas
                       text-xl
                       tracking-wider
+
                       rounded-xl
+
                       transition-all
                       duration-300
+
                       shadow-[0_0_15px_rgba(230,0,0,0.25)]
                       hover:shadow-[0_0_30px_rgba(230,0,0,0.55)]
+
                       cursor-pointer
+
                       flex
                       items-center
                       justify-center
@@ -613,20 +656,28 @@ const Events = () => {
                       w-full
                       py-4
                       px-4
+
                       bg-zinc-900
                       border
                       border-red-600
+
                       hover:bg-red-600
+
                       text-white
                       font-bebas
                       text-xl
                       tracking-wider
+
                       rounded-xl
+
                       transition-all
                       duration-300
+
                       shadow-[0_0_15px_rgba(230,0,0,0.25)]
                       hover:shadow-[0_0_30px_rgba(230,0,0,0.55)]
+
                       cursor-pointer
+
                       flex
                       items-center
                       justify-center
@@ -661,16 +712,23 @@ const Events = () => {
                 className="
                   w-full
                   py-4
+
                   bg-red-600
                   hover:bg-red-700
+
                   text-white
+
                   font-bebas
                   text-2xl
                   tracking-widest
+
                   rounded-xl
+
                   transition-all
                   duration-300
+
                   shadow-[0_0_25px_rgba(230,0,0,0.6)]
+
                   cursor-pointer
                 "
               >
