@@ -21,7 +21,7 @@ import { playHeistClickSound } from '../utils/audio';
 | PUT YOUR ACTUAL GOOGLE DRIVE SUBMISSION LINK HERE
 */
 const WEB3_SUBMISSION_LINK =
-  'YOUR_GOOGLE_DRIVE_SUBMISSION_LINK_HERE';
+  'https://docs.google.com/forms/d/1V-JBXqtYZSJX2uaoloi85NkIeE4iL1AmERxPmh0Nw4A/edit?pli=1';
 
 
 const eventsData = [
