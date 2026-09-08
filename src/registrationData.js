@@ -6,28 +6,28 @@ export const EVENT_DATABASE = {
     iconKey: "HEIST",
     price: 150,
     shortDescription: "Break the vault. Crack the grid.",
-    whatsapp: "https://chat.whatsapp.com/FnhPSH6Bbii9w9G285rZcP?s=cl&p=a&ilr=1",
+    whatsapp: "https://chat.whatsapp.com/Dcx5SJ4a6Dv17iZLins6lv",
   },
   DETECTYX: {
     name: "DetectYx",
     iconKey: "DETECTYX",
     price: 140,
     shortDescription: "Trace the signal. Expose the truth.",
-    whatsapp: "https://chat.whatsapp.com/BGnWJZHt6Lv0PnPKQ78OUo?s=cl&p=a&ilr=1",
+    whatsapp: "https://chat.whatsapp.com/K0UJXmMgeSFKz8RQh5oiVk",
   },
   WEB3: {
     name: "Web3 Hackathon",
     iconKey: "WEB3",
     price: 250,
     shortDescription: "Build the next decentralized operation.",
-    whatsapp: "https://chat.whatsapp.com/GE8AXPKQAhE9RykOSZWLjE?s=cl&p=a&ilr=1",
+    whatsapp: "https://chat.whatsapp.com/HRInasVc2rcF0LWCRDAmGW",
   },
   NGV: {
     name: "Campus Rush",
     iconKey: "NGV",
     price: 150,
     shortDescription: "Tactical battle. Speed. Strategy. Teamwork.",
-    whatsapp: "https://chat.whatsapp.com/LbPcKtJzMrdClmv8jz7lTV?s=cl&p=a&ilr=1",
+    whatsapp: "https://chat.whatsapp.com/BIYDhoIZ0LA20rvVZ9nnyW",
   },
 };
 
