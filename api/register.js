@@ -12,7 +12,7 @@ const EVENT_CODES = {
   HEIST: "HEIST",
   DETECTYX: "DETECTYX",
   WEB3: "WEB3",
-  NGV: "NGV",
+  NGV: "RUSH",
 };
 
 let cachedAuth;

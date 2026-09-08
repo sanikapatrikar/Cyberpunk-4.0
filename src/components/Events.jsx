@@ -42,7 +42,7 @@ const eventsData = [
       '3 levels of challenges: Intermediate, Hard, and Intense.',
       'Team-based CTF competition with 2-4 members.',
       'Challenges ranging from 100 to 600 points.',
-      'No Fees Refund Policy.',
+      'No Paid Fees Refund Policy.',
     ],
   },
 
@@ -64,7 +64,7 @@ const eventsData = [
       'Build solutions for real-world problems.',
       'Industry mentorship and hands-on development.',
       'Final project demonstration and PPT pitch.',
-      'No Fees Refund Policy.',
+      'No Paid Fees Refund Policy.',
     ],
   },
 
@@ -86,7 +86,7 @@ const eventsData = [
       'OSINT and crime-scene investigation.',
       'Metadata analysis and suspect interrogation.',
       'Digital forensics and hidden-data recovery.',
-      'No Fees Refund Policy.',
+      'No Paid Fees Refund Policy.',
     ],
   },
 
@@ -108,7 +108,7 @@ const eventsData = [
       'Challenge Arena: Cup Pyramid, Puzzle Challenge, and Balloon Burst.',
       'Guess the Word time-advantage challenge.',
       'Blindfolded RC Car Final Showdown.',
-      'No Fees Refund Policy.',
+      'No Paid Fees Refund Policy.',
     ],
   },
 ];
