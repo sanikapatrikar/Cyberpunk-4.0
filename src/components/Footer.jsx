@@ -77,11 +77,11 @@ const Footer = () => {
 
 
             <p className="font-mono-cyber text-xs text-gray-500 leading-relaxed">
-              // CLASSIFIED EVENT NETWORK
+              • CLASSIFIED EVENT NETWORK
               <br />
-              // CYBERPUNK 2026
+              • CYBERPUNK 2K26
               <br />
-              // ACCESS GRANTED
+              • ACCESS GRANTED
             </p>
 
 
@@ -197,7 +197,7 @@ const Footer = () => {
                 </p>
 
                 <p className="font-mono-cyber text-sm text-gray-400 mt-1">
-                  10 SEPTEMBER 2026
+                  10 SEPTEMBER 2k26
                 </p>
 
               </div>
@@ -210,7 +210,7 @@ const Footer = () => {
                 </p>
 
                 <p className="font-mono-cyber text-sm text-gray-400 mt-1">
-                  Computer Science Engineering and Cyber Security
+                  COMPUTER SCIENCE ENGINEERING ( CYBER SECURITY )
                 </p>
 
               </div>
@@ -223,7 +223,7 @@ const Footer = () => {
                 </p>
 
                 <p className="font-mono-cyber text-sm text-gray-400 mt-1">
-                  ST. Vincent Pallotti Collage Of Engineering and Technology
+                  ST.VINCENT PALLOTTI COLLEGE OF ENGINEERING AND TECHNOLOGY
                 </p>
 
               </div>
@@ -399,9 +399,9 @@ const Footer = () => {
 
 
             <p className="font-mono-cyber text-[10px] sm:text-xs text-zinc-600 tracking-wider text-center md:text-left">
-              © 2k26 CYBERPUNK // CSECS // All Fees paid are non Refundable <br/>
+              © 2k26 CYBERPUNK // CSE(CS) // All Fee paid are NON REFUNDABLE <br/>
 
-              Devoped by-
+              Showrunners-
               Technical head- Sanika Patrikar<br/>
               Technical Co-Head - Ved Korde
             </p>
